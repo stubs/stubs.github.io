@@ -11,6 +11,7 @@ description:         'I''ll <i>occasionally</i> throw some personal projects and
 url:                 http://stubs.github.io
 baseurl:             ''
 paginate:            5
+github: 'https://github.com/stubs'
 
 # About/contact
 author:
@@ -21,10 +22,6 @@ author:
 # Custom vars
 version:             1.0.0
 
-pages_list:       
-  about: '/about'
-  github : 'https://github.com/stubs'
-  else: '/else'
 
 #Plugins
 gems: [jekyll-paginate]

@@ -1,0 +1,11 @@
+---
+layout: post
+title: Playing around with P5.js
+excerpt: ~On trying to be more artsy~ 
+
+---
+I recently traveled out west to see an old buddy of mine.  L.A. always seems to open my eyes up to new things.  One of the cool things I was introduced to was Processing and P5.js.  This might need a little bit of back story, but let me preface everything that follows by stating that I am a pretty boring dude.  I like numbers and textbooks, but seeing what kind of visual stuff was easily possible left a lasting impression on me.
+
+I (after watching a few youtube videos by Dan Shiffman working in [Processing](https://processing.org)) was able to create the following purple rain example using the P5.js library.  Initially, I was not really looking forward to working with Javascript, but having someting THIS visual helped to get me excited about the entire process. 
+
+Definitely a welcome change from staring at SQL databases all day. 

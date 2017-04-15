@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>Aaron D. Gonzalez</title>
- <link href="http://stubs.github.io/atom.xml" rel="self"/>
- <link href="http://stubs.github.io/"/>
- <updated>2016-05-09T23:40:55-04:00</updated>
- <id>http://stubs.github.io</id>
+ <link href="http://localhost:4000/atom.xml" rel="self"/>
+ <link href="http://localhost:4000/"/>
+ <updated>2017-04-15T14:27:40-04:00</updated>
+ <id>http://localhost:4000</id>
  <author>
    <name>Aaron D. Gonzalez</name>
    <email>a.gonzalez979@gmail.com</email>
@@ -13,13 +13,107 @@
 
  
  <entry>
+   <title>Virtualenv with Python</title>
+   <link href="http://localhost:4000/2017/04/10/Virtualenv/"/>
+   <updated>2017-04-10T00:00:00-04:00</updated>
+   <id>http://localhost:4000/2017/04/10/Virtualenv</id>
+   <content type="html">&lt;p&gt;I was a late comer to the the whole virtual environment thing with Python, and 
+to be completely honest I have yet to come across any of the potential issues 
+that I see cited by everyone as reasons to use them. This being said, I have still developed some 
+personal reasons why I like to use them, some of these &lt;em&gt;may or may not be because I am lazy
+as all hell&lt;/em&gt;….but that is neither here nor there.  Lets jump into virtualenv.&lt;/p&gt;
+
+&lt;h2 id=&quot;what&quot;&gt;What?&lt;/h2&gt;
+&lt;p&gt;I am more than aware that many of y’all probably already know what the package does,
+but for those who are still new to the game and are still exploring the wealth of 
+information online about Python, &lt;a href=&quot;https://pypi.python.org/pypi/virtualenv&quot;&gt;virutalenv&lt;/a&gt;
+is a python module that lets you create isolated python environments for whatever 
+project you want to work on. I might be misguided in my thinking, but I like to 
+think it offers a clean slate for each and every different project you are going to
+begin work on.&lt;/p&gt;
+
+&lt;h2 id=&quot;why&quot;&gt;Why?&lt;/h2&gt;
+&lt;p&gt;This was one of those questions that I asked myself when I first heard about virtualenv. 
+When I first started working in Python I was pretty pip-crazy. I kinda loved to just exlpore all the libraries 
+and see what was available. Unfortunately this left my “pip list” output longer 
+than I wanted. Sure, I could just go ahead and remove the stuff I didn’t use, 
+but who wants to do that. I like the idea of having the packages around for when I want to work 
+on said code, but being out of sight when I don’t need to think about them. 
+Virtualenv helps with this. Now I simply create a new virtual environment for the 
+new python program that I want to work on and pip install any additional package
+dependencies. Any of these additional packages that you install will ONLY be 
+available in the virtualenv you install them to.&lt;/p&gt;
+
+&lt;h2 id=&quot;how&quot;&gt;How?&lt;/h2&gt;
+&lt;h3 id=&quot;installing-virtualenv&quot;&gt;Installing virtualenv&lt;/h3&gt;
+&lt;p&gt;Assuming you already have &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt; installed, are going to want to install virtualenv globally.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install virtualenv
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;creating-a-virtualenv&quot;&gt;Creating a virtualenv&lt;/h3&gt;
+&lt;p&gt;Next, simply cd into the directory you are going to work in. In my example I am going to 
+go all &lt;em&gt;Inception&lt;/em&gt; and create a virtualenv inside my project directory named…. “vrtlenv”.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/dev/vrtlenv
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;virtualenv env
+New python executable &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; ~/dev/vrtlenv/env/bin/python2.7
+Also creating executable &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; ~/dev/vrtlenv/env/bin/python
+Installing setuptools, pip, wheel...done.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;virtualenv env&lt;/code&gt; bit is creating a virtual environment to a directory named “env”. It is 
+not required that you name it “env”, but it is convention. Also, I would like others looking at 
+a project I have started to have to do as little as possible to continue to work. Moving on, to actually 
+step into the new virtual environment you need to &lt;em&gt;activate&lt;/em&gt; it.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;env/bin/activate
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You’ll be able to tell that you are in said virtual environment because there will
+now be &lt;code class=&quot;highlighter-rouge&quot;&gt;(env)&lt;/code&gt; pre-pended to the start of your command line prompt (if you chose
+to go with a name other than “env” it will show up instead of “env”).&lt;/p&gt;
+
+&lt;p&gt;As an additional sanity check you can &lt;code class=&quot;highlighter-rouge&quot;&gt;pip list&lt;/code&gt; once the virtualenv is activated.
+If you had any pip packages installed gloablly you should not see them in the pip
+list output from within this virtual environment….because this is an isolated work
+environment! Now you can pip install any packages/modules you need for your new python
+program and it there will be no worries about whether or not they will cause any kind
+of issues with other global packages.&lt;/p&gt;
+
+&lt;p&gt;Once you are done working do not forget to &lt;code class=&quot;highlighter-rouge&quot;&gt;deactivate&lt;/code&gt; the virtualenv. Like before
+you’ll be able to tell that you have successfully returned to the global environment
+by noticing the lack of the &lt;code class=&quot;highlighter-rouge&quot;&gt;(env)&lt;/code&gt; at the start of your command line prompt. Any time 
+you ever need to do more work on your project just remember to activate your virtualenv 
+by calling &lt;code class=&quot;highlighter-rouge&quot;&gt;$ source env/bin/activate&lt;/code&gt; from inside the project’s directory!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;While I have never actually ran into these depencency issues, I got sick of 
+removing a ton of stuff from my &lt;code class=&quot;highlighter-rouge&quot;&gt;pip freeze &amp;gt; requirements.txt&lt;/code&gt; output when I was trying to share 
+some work with others. ~Lazy, I know.~ I don’t know about y’all, but 
+I would rather invest some time to setup these isolated virtual environments 
+just to save myself the hassle of having to avoid cleaning up my requirements.txt file.&lt;/p&gt;
+
+&lt;h2 id=&quot;extra&quot;&gt;Extra&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Jaime Matthews does a great job &lt;a href=&quot;https://www.dabapps.com/blog/introduction-to-pip-and-virtualenv-python/&quot;&gt;explaining it&lt;/a&gt; better than I did.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://docs.python-guide.org/en/latest/dev/virtualenvs/&quot;&gt;The Hitchhiker’s Guide to Python on virtualenvs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Playing around with P5.js</title>
-   <link href="http://stubs.github.io/2016/04/30/Playing-around-with-p5/"/>
+   <link href="http://localhost:4000/2016/04/30/Playing-around-with-p5/"/>
    <updated>2016-04-30T00:00:00-04:00</updated>
-   <id>http://stubs.github.io/2016/04/30/Playing-around-with-p5</id>
+   <id>http://localhost:4000/2016/04/30/Playing-around-with-p5</id>
    <content type="html">&lt;p&gt;I recently traveled out west to see an old buddy of mine.  L.A. always seems to open my eyes up to new things.  While there this time, I was introduced to Processing and P5.js.  This might need a little bit of back story, but let me preface everything that follows by stating that I am a pretty boring dude.  I like numbers and textbooks, but seeing what kind of visual stuff was easily possible left a lasting impression on me.&lt;/p&gt;
 
-&lt;p&gt;I (after watching a few youtube videos by Dan Shiffman working in &lt;a href=&quot;https://processing.org&quot;&gt;Processing&lt;/a&gt;) was able to create the following purple rain example using the P5.js library.  Initially, I was not really looking forward to working with Javascript, but having someting THIS visual helped to get me excited about the entire process. Well…that, and some of the interactive stuff others were doing incorporating other peripherals like the Kinect.&lt;/p&gt;
+&lt;p&gt;I (after watching a few youtube videos by Dan Shiffman working in &lt;a href=&quot;https://processing.org&quot;&gt;Processing&lt;/a&gt;) was able to create the following purple rain example using the P5.js library.  Initially, I was not really looking forward to working with Javascript, but having something THIS visual helped to get me excited about the entire process. Well…that, and some of the interactive stuff others were doing incorporating other peripherals like the Kinect.&lt;/p&gt;
 
 &lt;p&gt;Definitely a welcome change from staring at SQL databases all day.&lt;/p&gt;
 </content>

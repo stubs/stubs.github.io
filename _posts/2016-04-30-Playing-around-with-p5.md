@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: p5_post
 title: Playing around with P5.js
 excerpt: ~On trying to be more artsy~ 
 ---

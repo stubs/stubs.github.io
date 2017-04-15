@@ -6,7 +6,7 @@ permalink:           pretty
 
 # Setup
 title:               Aaron D. Gonzalez
-tagline:             '...pos vamos'
+tagline:             ''
 description:         'I''ll <i>occasionally</i> throw some personal projects and professional endeavors up here. ===>'
 url:                 http://stubs.github.io
 baseurl:             ''
@@ -16,7 +16,7 @@ github: 'https://github.com/stubs'
 # About/contact
 author:
   name:              Aaron D. Gonzalez
-  url:
+  url:              "aarongonzalez.sucks"
   email:             a.gonzalez979@gmail.com
 
 # Custom vars

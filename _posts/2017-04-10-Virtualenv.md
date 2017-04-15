@@ -33,7 +33,7 @@ available in the virtualenv you install them to.
 
 ## How?
 ### Installing virtualenv
-Assuming you already have `pip` installed, are going to want to install virtualenv globally.
+Assuming you already have `pip` installed, you are going to want to install virtualenv globally.
 
 ```bash
 pip install virtualenv

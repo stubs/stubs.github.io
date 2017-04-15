@@ -21,7 +21,7 @@ begin work on.
 
 ## Why?
 This was one of those questions that I asked myself when I first heard about virtualenv. 
-When I first started working in Python I was pretty pip-crazy. I kinda loved to just exlpore all the libraries 
+When I first started working in Python I was pretty pip-crazy. I kinda loved to just explore all the libraries 
 and see what was available. Unfortunately this left my "pip list" output longer 
 than I wanted. Sure, I could just go ahead and remove the stuff I didn't use, 
 but who wants to do that. I like the idea of having the packages around for when I want to work 
@@ -65,7 +65,7 @@ now be `(env)` prepended to the start of your command line prompt (if you chose
 to go with a name other than "env" it will show up instead of "env").
 
 As an additional sanity check you can `pip list` once the virtualenv is activated.
-If you had any pip packages installed gloablly you should not see them in the pip
+If you had any pip packages installed globally you should not see them in the pip
 list output from within this virtual environment....because this is an isolated work
 environment! Now you can pip install any packages/modules you need for your new python
 program and it there will be no worries about whether or not they will cause any kind
@@ -79,7 +79,7 @@ by calling `$ source env/bin/activate` from inside the project's directory!
 
 ---
 
-While I have never actually ran into these depencency issues, I got sick of 
+While I have never actually ran into these dependency issues, I got sick of 
 removing a ton of stuff from my `pip freeze > requirements.txt` output when I was trying to share 
 some work with others. ~Lazy, I know.~ I don't know about y'all, but 
 I would rather invest some time to setup these isolated virtual environments 

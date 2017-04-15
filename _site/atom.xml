@@ -4,7 +4,7 @@
  <title>Aaron D. Gonzalez</title>
  <link href="http://localhost:4000/atom.xml" rel="self"/>
  <link href="http://localhost:4000/"/>
- <updated>2017-04-15T14:27:40-04:00</updated>
+ <updated>2017-04-15T15:41:12-04:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Aaron D. Gonzalez</name>
@@ -74,7 +74,7 @@ step into the new virtual environment you need to &lt;em&gt;activate&lt;/em&gt; 
 &lt;/div&gt;
 
 &lt;p&gt;You’ll be able to tell that you are in said virtual environment because there will
-now be &lt;code class=&quot;highlighter-rouge&quot;&gt;(env)&lt;/code&gt; pre-pended to the start of your command line prompt (if you chose
+now be &lt;code class=&quot;highlighter-rouge&quot;&gt;(env)&lt;/code&gt; prepended to the start of your command line prompt (if you chose
 to go with a name other than “env” it will show up instead of “env”).&lt;/p&gt;
 
 &lt;p&gt;As an additional sanity check you can &lt;code class=&quot;highlighter-rouge&quot;&gt;pip list&lt;/code&gt; once the virtualenv is activated.

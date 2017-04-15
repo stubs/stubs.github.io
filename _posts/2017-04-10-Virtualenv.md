@@ -61,7 +61,7 @@ $ source env/bin/activate
 ```
 
 You'll be able to tell that you are in said virtual environment because there will
-now be `(env)` pre-pended to the start of your command line prompt (if you chose
+now be `(env)` prepended to the start of your command line prompt (if you chose
 to go with a name other than "env" it will show up instead of "env").
 
 As an additional sanity check you can `pip list` once the virtualenv is activated.

@@ -11,7 +11,7 @@
 
   <title>
     
-      Aaron D. Gonzalez &middot; 
+      Data Visualization with pandas & Dash &middot; Aaron D. Gonzalez
     
   </title>
   
@@ -104,20 +104,9 @@
       </div>
 
       <div class="container content">
-        <div class="posts">
-  
-  <div class="post">
-    <h1 class="post-title">
-      <!--<a href="//2017/07/10/dash/">-->
-      <a href="/2017/07/10/dash/">
-        Data Visualization with pandas & Dash
-      </a>
-    </h1>
-
-    <!--<span class="post-date">10 Jul 2017</span> -->
-     <p> A quick rundown of using Python's pandas package to prep flat file data for plotting with Dash. </p>
-     <p> <a class = "graybutton" href="/2017/07/10/dash/">Continue reading</a></p>
-     <!--<p><img src="http://localhost:4000/public/dash/dash_app.png" alt="my screenshot" class="center-image" /></p>
+        <div class="post">
+  <h1 class="post-title">Data Visualization with pandas & Dash</h1>
+  <p><img src="http://localhost:4000/public/dash/dash_app.png" alt="my screenshot" class="center-image" /></p>
 
 <p>Anytime I have a chance to make something visual out of my work I jump at the
 opportunity. I recently had some free time on my hands, and lo and behold I also had my
@@ -293,138 +282,31 @@ something similar to what you see below!</p>
   <li><a href="http://pandas.pydata.org/pandas-docs/stable/10min.html">10 Minutes to pandas</a></li>
   <li><a href="http://pandas.pydata.org/pandas-docs/stable/tutorials.html">Tutorials</a></li>
 </ul>
--->
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <!--<a href="//2017/04/10/Virtualenv/">-->
-      <a href="/2017/04/10/Virtualenv/">
-        Virtualenv with Python
-      </a>
-    </h1>
 
-    <!--<span class="post-date">10 Apr 2017</span> -->
-     <p> On creating isolated python environments </p>
-     <p> <a class = "graybutton" href="/2017/04/10/Virtualenv/">Continue reading</a></p>
-     <!--<p>I was a late comer to the the whole virtual environment thing with Python, and 
-to be completely honest I have yet to come across any of the potential issues 
-that I see cited by everyone as reasons to use them. This being said, I have still developed some 
-personal reasons why I like to use them, some of these <em>may or may not be because I am lazy
-as all hell</em>….but that is neither here nor there.  Lets jump into virtualenv.</p>
-
-<h2 id="what">What?</h2>
-<p>I am more than aware that many of y’all probably already know what the package does,
-but for those who are still new to the game and are still exploring the wealth of 
-information online about Python, <a href="https://pypi.python.org/pypi/virtualenv">virutalenv</a>
-is a python module that lets you create isolated python environments for whatever 
-project you want to work on. I might be misguided in my thinking, but I like to 
-think it offers a clean slate for each and every different project you are going to
-begin work on.</p>
-
-<h2 id="why">Why?</h2>
-<p>This was one of those questions that I asked myself when I first heard about virtualenv. 
-When I first started working in Python I was pretty pip-crazy. I kinda loved to just explore all the libraries 
-and see what was available. Unfortunately this left my “pip list” output longer 
-than I wanted. Sure, I could just go ahead and remove the stuff I didn’t use, 
-but who wants to do that. I like the idea of having the packages around for when I want to work 
-on said code, but being out of sight when I don’t need to think about them. 
-Virtualenv helps with this. Now I simply create a new virtual environment for the 
-new python program that I want to work on and pip install any additional package
-dependencies. Any of these additional packages that you install will ONLY be 
-available in the virtualenv you install them to.</p>
-
-<h2 id="how">How?</h2>
-<h3 id="installing-virtualenv">Installing virtualenv</h3>
-<p>Assuming you already have <code class="highlighter-rouge">pip</code> installed, you are going to want to install virtualenv globally.</p>
-
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>pip install virtualenv
-</code></pre>
 </div>
-
-<h3 id="creating-a-virtualenv">Creating a virtualenv</h3>
-<p>Next, simply cd into the directory you are going to work in. In my example I am going to 
-go all <em>Inception</em> and create a virtualenv inside my project directory named…. “vrtlenv”.</p>
-
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">cd</span> ~/dev/vrtlenv
-<span class="gp">$ </span>virtualenv env
-New python executable <span class="k">in</span> ~/dev/vrtlenv/env/bin/python2.7
-Also creating executable <span class="k">in</span> ~/dev/vrtlenv/env/bin/python
-Installing setuptools, pip, wheel...done.
-</code></pre>
-</div>
-
-<p>The <code class="highlighter-rouge">virtualenv env</code> bit is creating a virtual environment to a directory named “env”. It is 
-not required that you name it “env”, but it is convention. Also, I would like others looking at 
-a project I have started to have to do as little as possible to continue to work. Moving on, to actually 
-step into the new virtual environment you need to <em>activate</em> it.</p>
-
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">source </span>env/bin/activate
-</code></pre>
-</div>
-
-<p>You’ll be able to tell that you are in said virtual environment because there will
-now be <code class="highlighter-rouge">(env)</code> prepended to the start of your command line prompt (if you chose
-to go with a name other than “env” it will show up instead of “env”).</p>
-
-<p>As an additional sanity check you can <code class="highlighter-rouge">pip list</code> once the virtualenv is activated.
-If you had any pip packages installed globally you should not see them in the pip
-list output from within this virtual environment….because this is an isolated work
-environment! Now you can pip install any packages/modules you need for your new python
-program and it there will be no worries about whether or not they will cause any kind
-of issues with other global packages.</p>
-
-<p>Once you are done working do not forget to <code class="highlighter-rouge">deactivate</code> the virtualenv. Like before
-you’ll be able to tell that you have successfully returned to the global environment
-by noticing the lack of the <code class="highlighter-rouge">(env)</code> at the start of your command line prompt. Any time 
-you ever need to do more work on your project just remember to activate your virtualenv 
-by calling <code class="highlighter-rouge">$ source env/bin/activate</code> from inside the project’s directory!</p>
-
-<hr />
-
-<p>While I have never actually ran into these dependency issues, I got sick of 
-removing a ton of stuff from my <code class="highlighter-rouge">pip freeze &gt; requirements.txt</code> output when I was trying to share 
-some work with others. ~Lazy, I know.~ I don’t know about y’all, but 
-I would rather invest some time to setup these isolated virtual environments 
-just to save myself the hassle of having to avoid cleaning up my requirements.txt file.</p>
-
-<h2 id="extra">Extra</h2>
-<ul>
-  <li>Jaime Matthews does a great job <a href="https://www.dabapps.com/blog/introduction-to-pip-and-virtualenv-python/">explaining it</a> better than I did.</li>
-  <li><a href="http://docs.python-guide.org/en/latest/dev/virtualenvs/">The Hitchhiker’s Guide to Python on virtualenvs</a></li>
-</ul>
--->
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <!--<a href="//2016/04/30/Playing-around-with-p5/">-->
-      <a href="/2016/04/30/Playing-around-with-p5/">
-        Playing around with P5.js
-      </a>
-    </h1>
-
-    <!--<span class="post-date">30 Apr 2016</span> -->
-     <p> ~On trying to be more artsy~ </p>
-     <p> <a class = "graybutton" href="/2016/04/30/Playing-around-with-p5/">Continue reading</a></p>
-     <!--<p>I recently traveled out west to see an old buddy of mine.  L.A. always seems to open my eyes up to new things.  While there this time, I was introduced to Processing and P5.js.  This might need a little bit of back story, but let me preface everything that follows by stating that I am a pretty boring dude.  I like numbers and textbooks, but seeing what kind of visual stuff was easily possible left a lasting impression on me.</p>
-
-<p>I (after watching a few youtube videos by Dan Shiffman working in <a href="https://processing.org">Processing</a>) was able to create the following purple rain example using the P5.js library.  Initially, I was not really looking forward to working with Javascript, but having something THIS visual helped to get me excited about the entire process. Well…that, and some of the interactive stuff others were doing incorporating other peripherals like the Kinect.</p>
-
-<p>Definitely a welcome change from staring at SQL databases all day.</p>
--->
-  </div>
-  
-</div>
-
-<!-- REMOVE PAGINATION -->
-<!--<div class="pagination">
-  
-    <span class="pagination-item older">Older</span>
-  
-  
-    <span class="pagination-item newer">Newer</span>
-  
+<!--<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="//2017/04/10/Virtualenv/">
+            Virtualenv with Python
+            <small>10 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2016/04/30/Playing-around-with-p5/">
+            Playing around with P5.js
+            <small>30 Apr 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
 </div>
 -->
 

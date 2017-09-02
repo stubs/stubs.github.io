@@ -108,6 +108,57 @@
   
   <div class="post">
     <h1 class="post-title">
+      <!--<a href="//2017/09/02/unpack-arg-lists/">-->
+      <a href="/2017/09/02/unpack-arg-lists/">
+        Unpacking Argument Lists
+      </a>
+    </h1>
+
+    <!--<span class="post-date">02 Sep 2017</span> -->
+
+    <p>
+        <a href="/2017/09/02/unpack-arg-lists/"><img class="centered" src="https://stubs.github.io/public/unpack_arg_lists/excerpt_photo.png" alt=""></a>
+    </p>
+
+     <p> Recent real life example of having to utilize the "Splat" operator to work with variable length lists that are to be input to methods that require separate positional arguments. </p>
+     <p> <a class = "graybutton" href="/2017/09/02/unpack-arg-lists/">Continue reading</a></p>
+     <!--<p>I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have definitely helped out, but inevitably I find that said applications are lacking in some way or another.  Maybe it’s that the application does not easily allow (or possibly does not allow at all) any kind of recursive searching, does not allow ways to specify certain directories to not even bother searching, or godforbid it does allow any kind of regular expressions.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun &amp; practical.  The code is available on my GitHub (LINK). (Although it may have changed some from the time of this writing).</p>
+
+<p>In a nutshell, the python script utilizes the Subprocess module to make a call to grep to look for a given regular expression.  In the example, below I simply was looking for “smith” (case insensitive) in a directory appropriately named “test_data”.
+<img src="http://localhost:4000/public/unpack_arg_lists/photo0.png" alt="code0" class="center-image" /></p>
+
+<p>The results are below:
+<img src="http://localhost:4000/public/unpack_arg_lists/photo1.png" alt="code1" class="center-image" /></p>
+
+<p>“Great!”, I thought.  Now I can use Python’s Subprocess module to make a “head” call to gather the given file’s column headers.  Seems simple enough. In this case, my test data was all in one directory (which was my first mistake) appropriately name “/test_data”, so I did not think much of how to accomplish this task.</p>
+
+<p>Before I can make the Subprocess module call <code class="highlighter-rouge">head -1</code> to gather the first row of a file, I need to first parse the path to the file from the data yielded in the first column (as shown above). Lastly, I can pass the individual variables client &amp; file_name to the <code class="highlighter-rouge">os.path.join()</code> method to get a intelligently joined path. :
+<img src="http://localhost:4000/public/unpack_arg_lists/photo2.png" alt="code2" class="center-image" /></p>
+
+<h3 id="complicating-stuff">COMPLICATING STUFF</h3>
+<p>Well what if your grep search finds hits at various different depths of recursion?  For instance, what if the directory containing all the data I wished to grep looked something like this:
+<img src="http://localhost:4000/public/unpack_arg_lists/photo3.png" alt="code3" class="center-image" /></p>
+
+<p>Unfortunately, <code class="highlighter-rouge">os.path.join()</code> is a function call requiring separate positional arguments.  This means one cannot simply create a list of all the different directories that construct the path to work with and pass that into <code class="highlighter-rouge">os.path.join()</code>.
+<img src="http://localhost:4000/public/unpack_arg_lists/photo4.png" alt="code4" class="center-image" /></p>
+
+<p>This puzzled me for a while, but rather than immediately try to start coding a solution I made myself take a quick break and grab a coffee.  I had a feeling I had stumbled across something similar when I was reading through every Python text book I could find (back when I was reading a lot more than actually writing).</p>
+
+<p>Sure enough I remembered reading about how to denote functions that could be called with arbitrary arguments lists using the “*” character. The same character can also unpack arguments that are already in a list or tuple to be used for a function call that needs separate arguments….like <code class="highlighter-rouge">os.path.join()</code>!
+<img src="http://localhost:4000/public/unpack_arg_lists/photo5.png" alt="code5" class="center-image" /></p>
+
+<p>Utilizing the almighty * I was able to easily grep files for a regex pattern &amp; pull header rows for any files that were reported as having matches by my previous grep call with one python script.
+<img src="http://localhost:4000/public/unpack_arg_lists/photo6.png" alt="code6" class="center-image" /></p>
+
+<h3 id="related-links">Related Links:</h3>
+<ul>
+  <li><a href="https://docs.python.org/3/tutorial/controlflow.html#unpacking-argument-lists">Python Documentation</a></li>
+</ul>
+-->
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <!--<a href="//2017/07/10/dash/">-->
       <a href="/2017/07/10/dash/">
         Data Visualization with pandas & Dash
@@ -158,11 +209,11 @@ ears talked off with the wealth of blog posts, PyCon tutorials, etc lauding pand
 Data Wrangling and Data Analysis. When I first started working in Python, I was reluctant
 to rely on pandas and preferred to roll my own functions for all my data wrangling needs. I
 really wish that I would have been more open to using it earlier. It has done nothing but
-increase my productivity when it comes to working with CSV data.</p>
+increase my productivity when it comes to working with CSV/Excel data.</p>
 
 <p>First, we are going to want to read in the data file to model the data in a
 Dataframe object (one of two data structures that pandas brings to Python). For brevity,
-I am only going to be showing a portion of the 213 rows that are in this CSV.</p>
+I am only going to be showing a portion of the 213 rows that are in this xlsx file.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#read in excel data</span>
 <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s">"data/aug_dec_2016.xlsx"</span><span class="p">)</span>
@@ -294,9 +345,9 @@ something similar to what you see below!</p>
 
 <h3 id="related-links">Related Links:</h3>
 <ul>
-  <li><a href="http://www.gregreda.com/2013/10/26/intro-to-pandas-data-structures/">Greg Reda</a></li>
+  <li><a href="http://www.gregreda.com/2013/10/26/intro-to-pandas-data-structures/">Greg Reda’s Intro to Pandas Data Structures</a></li>
   <li><a href="http://pandas.pydata.org/pandas-docs/stable/10min.html">10 Minutes to pandas</a></li>
-  <li><a href="http://pandas.pydata.org/pandas-docs/stable/tutorials.html">Tutorials</a></li>
+  <li><a href="http://pandas.pydata.org/pandas-docs/stable/tutorials.html">Additional Tutorials</a></li>
 </ul>
 -->
   </div>

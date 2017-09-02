@@ -142,11 +142,11 @@ ears talked off with the wealth of blog posts, PyCon tutorials, etc lauding pand
 Data Wrangling and Data Analysis. When I first started working in Python, I was reluctant
 to rely on pandas and preferred to roll my own functions for all my data wrangling needs. I
 really wish that I would have been more open to using it earlier. It has done nothing but
-increase my productivity when it comes to working with CSV data.</p>
+increase my productivity when it comes to working with CSV/Excel data.</p>
 
 <p>First, we are going to want to read in the data file to model the data in a
 Dataframe object (one of two data structures that pandas brings to Python). For brevity,
-I am only going to be showing a portion of the 213 rows that are in this CSV.</p>
+I am only going to be showing a portion of the 213 rows that are in this xlsx file.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#read in excel data</span>
 <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s">"data/aug_dec_2016.xlsx"</span><span class="p">)</span>
@@ -278,15 +278,24 @@ something similar to what you see below!</p>
 
 <h3 id="related-links">Related Links:</h3>
 <ul>
-  <li><a href="http://www.gregreda.com/2013/10/26/intro-to-pandas-data-structures/">Greg Reda</a></li>
+  <li><a href="http://www.gregreda.com/2013/10/26/intro-to-pandas-data-structures/">Greg Reda’s Intro to Pandas Data Structures</a></li>
   <li><a href="http://pandas.pydata.org/pandas-docs/stable/10min.html">10 Minutes to pandas</a></li>
-  <li><a href="http://pandas.pydata.org/pandas-docs/stable/tutorials.html">Tutorials</a></li>
+  <li><a href="http://pandas.pydata.org/pandas-docs/stable/tutorials.html">Additional Tutorials</a></li>
 </ul>
 
 </div>
 <!--<div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="//2017/09/02/unpack-arg-lists/">
+            Unpacking Argument Lists
+            <small>02 Sep 2017</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>

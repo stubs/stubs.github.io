@@ -4,13 +4,53 @@
  <title>Aaron D. Gonzalez</title>
  <link href="http://localhost:4000/atom.xml" rel="self"/>
  <link href="http://localhost:4000/"/>
- <updated>2017-07-17T21:10:42-04:00</updated>
+ <updated>2017-09-02T16:48:41-04:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Aaron D. Gonzalez</name>
    <email>a.gonzalez979@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Unpacking Argument Lists</title>
+   <link href="http://localhost:4000/2017/09/02/unpack-arg-lists/"/>
+   <updated>2017-09-02T00:00:00-04:00</updated>
+   <id>http://localhost:4000/2017/09/02/unpack-arg-lists</id>
+   <content type="html">&lt;p&gt;I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have definitely helped out, but inevitably I find that said applications are lacking in some way or another.  Maybe it’s that the application does not easily allow (or possibly does not allow at all) any kind of recursive searching, does not allow ways to specify certain directories to not even bother searching, or godforbid it does allow any kind of regular expressions.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun &amp;amp; practical.  The code is available on my GitHub (LINK). (Although it may have changed some from the time of this writing).&lt;/p&gt;
+
+&lt;p&gt;In a nutshell, the python script utilizes the Subprocess module to make a call to grep to look for a given regular expression.  In the example, below I simply was looking for “smith” (case insensitive) in a directory appropriately named “test_data”.
+&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo0.png&quot; alt=&quot;code0&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The results are below:
+&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo1.png&quot; alt=&quot;code1&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;“Great!”, I thought.  Now I can use Python’s Subprocess module to make a “head” call to gather the given file’s column headers.  Seems simple enough. In this case, my test data was all in one directory (which was my first mistake) appropriately name “/test_data”, so I did not think much of how to accomplish this task.&lt;/p&gt;
+
+&lt;p&gt;Before I can make the Subprocess module call &lt;code class=&quot;highlighter-rouge&quot;&gt;head -1&lt;/code&gt; to gather the first row of a file, I need to first parse the path to the file from the data yielded in the first column (as shown above). Lastly, I can pass the individual variables client &amp;amp; file_name to the &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt; method to get a intelligently joined path. :
+&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo2.png&quot; alt=&quot;code2&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;complicating-stuff&quot;&gt;COMPLICATING STUFF&lt;/h3&gt;
+&lt;p&gt;Well what if your grep search finds hits at various different depths of recursion?  For instance, what if the directory containing all the data I wished to grep looked something like this:
+&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo3.png&quot; alt=&quot;code3&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt; is a function call requiring separate positional arguments.  This means one cannot simply create a list of all the different directories that construct the path to work with and pass that into &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt;.
+&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo4.png&quot; alt=&quot;code4&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This puzzled me for a while, but rather than immediately try to start coding a solution I made myself take a quick break and grab a coffee.  I had a feeling I had stumbled across something similar when I was reading through every Python text book I could find (back when I was reading a lot more than actually writing).&lt;/p&gt;
+
+&lt;p&gt;Sure enough I remembered reading about how to denote functions that could be called with arbitrary arguments lists using the “*” character. The same character can also unpack arguments that are already in a list or tuple to be used for a function call that needs separate arguments….like &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt;!
+&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo5.png&quot; alt=&quot;code5&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Utilizing the almighty * I was able to easily grep files for a regex pattern &amp;amp; pull header rows for any files that were reported as having matches by my previous grep call with one python script.
+&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo6.png&quot; alt=&quot;code6&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;related-links&quot;&gt;Related Links:&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.python.org/3/tutorial/controlflow.html#unpacking-argument-lists&quot;&gt;Python Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Data Visualization with pandas & Dash</title>
@@ -53,11 +93,11 @@ ears talked off with the wealth of blog posts, PyCon tutorials, etc lauding pand
 Data Wrangling and Data Analysis. When I first started working in Python, I was reluctant
 to rely on pandas and preferred to roll my own functions for all my data wrangling needs. I
 really wish that I would have been more open to using it earlier. It has done nothing but
-increase my productivity when it comes to working with CSV data.&lt;/p&gt;
+increase my productivity when it comes to working with CSV/Excel data.&lt;/p&gt;
 
 &lt;p&gt;First, we are going to want to read in the data file to model the data in a
 Dataframe object (one of two data structures that pandas brings to Python). For brevity,
-I am only going to be showing a portion of the 213 rows that are in this CSV.&lt;/p&gt;
+I am only going to be showing a portion of the 213 rows that are in this xlsx file.&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#read in excel data&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_excel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;data/aug_dec_2016.xlsx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -189,9 +229,9 @@ something similar to what you see below!&lt;/p&gt;
 
 &lt;h3 id=&quot;related-links&quot;&gt;Related Links:&lt;/h3&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.gregreda.com/2013/10/26/intro-to-pandas-data-structures/&quot;&gt;Greg Reda&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.gregreda.com/2013/10/26/intro-to-pandas-data-structures/&quot;&gt;Greg Reda’s Intro to Pandas Data Structures&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;http://pandas.pydata.org/pandas-docs/stable/10min.html&quot;&gt;10 Minutes to pandas&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://pandas.pydata.org/pandas-docs/stable/tutorials.html&quot;&gt;Tutorials&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://pandas.pydata.org/pandas-docs/stable/tutorials.html&quot;&gt;Additional Tutorials&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content>
  </entry>

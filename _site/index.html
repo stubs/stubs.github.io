@@ -122,21 +122,21 @@
 
      <p> Recent real life example of having to utilize the "Splat" operator to work with variable length lists that are to be input to methods that require separate positional arguments. </p>
      <p> <a class = "graybutton" href="/2017/09/02/unpack-arg-lists/">Continue reading</a></p>
-     <!--<p>I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have definitely helped out, but inevitably I find that said applications are lacking in some way or another.  Maybe it’s that the application does not easily allow (or possibly does not allow at all) any kind of recursive searching, does not allow ways to specify certain directories to not even bother searching, or godforbid it does allow any kind of regular expressions.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun &amp; practical.  The code is available on my GitHub (LINK). (Although it may have changed some from the time of this writing).</p>
+     <!--<p>I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have definitely helped out, but inevitably I find that said applications are lacking in some way or another.  Maybe it’s that the application does not easily allow (or possibly does not allow at all) any kind of recursive searching, does not allow ways to specify certain directories to not even bother searching, or godforbid it does allow any kind of regular expressions.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun &amp; practical.  The code is available on my <a href="http://www.github.com/stubs/py_grep_parse">GitHub</a>. (Although it may have changed some from the time of this writing).</p>
 
-<p>In a nutshell, the python script utilizes the Subprocess module to make a call to grep to look for a given regular expression.  In the example, below I simply was looking for “smith” (case insensitive) in a directory appropriately named “test_data”.
+<p>In a nutshell, the python script utilizes the <a href="https://docs.python.org/2/library/subprocess.html">Subprocess</a> module to make a call to grep to look for a given regular expression.  In the example, below I simply was looking for “smith” (case insensitive) in a directory appropriately named “test_data”.
 <img src="http://localhost:4000/public/unpack_arg_lists/photo0.png" alt="code0" class="center-image" /></p>
 
 <p>The results are below:
 <img src="http://localhost:4000/public/unpack_arg_lists/photo1.png" alt="code1" class="center-image" /></p>
 
-<p>“Great!”, I thought.  Now I can use Python’s Subprocess module to make a “head” call to gather the given file’s column headers.  Seems simple enough. In this case, my test data was all in one directory (which was my first mistake) appropriately name “/test_data”, so I did not think much of how to accomplish this task.</p>
+<p>“Great!”, I thought.  Now I can make a <code class="highlighter-rouge">head</code> call to gather the given file’s column headers.  Seems simple enough. In this case, my test data was all in one directory (which was my first mistake) appropriately name “/test_data”, so I did not think much of how to accomplish this task.</p>
 
-<p>Before I can make the Subprocess module call <code class="highlighter-rouge">head -1</code> to gather the first row of a file, I need to first parse the path to the file from the data yielded in the first column (as shown above). Lastly, I can pass the individual variables client &amp; file_name to the <code class="highlighter-rouge">os.path.join()</code> method to get a intelligently joined path. :
+<p>Before I can make the <code class="highlighter-rouge">head -1</code> call to gather the first row of a file, I need to first parse the path to the file from the data yielded in the first column (as shown above). Lastly, I can pass the individual variables client &amp; file_name to the <code class="highlighter-rouge">os.path.join()</code> method to get a intelligently joined path. :
 <img src="http://localhost:4000/public/unpack_arg_lists/photo2.png" alt="code2" class="center-image" /></p>
 
 <h3 id="complicating-stuff">COMPLICATING STUFF</h3>
-<p>Well what if your grep search finds hits at various different depths of recursion?  For instance, what if the directory containing all the data I wished to grep looked something like this:
+<p>Well what if your grep search finds hits at different depths of recursion?  For instance, what if the directory containing all the data I wished to grep looked something like this:
 <img src="http://localhost:4000/public/unpack_arg_lists/photo3.png" alt="code3" class="center-image" /></p>
 
 <p>Unfortunately, <code class="highlighter-rouge">os.path.join()</code> is a function call requiring separate positional arguments.  This means one cannot simply create a list of all the different directories that construct the path to work with and pass that into <code class="highlighter-rouge">os.path.join()</code>.
@@ -152,7 +152,7 @@
 
 <h3 id="related-links">Related Links:</h3>
 <ul>
-  <li><a href="https://docs.python.org/3/tutorial/controlflow.html#unpacking-argument-lists">Python Documentation</a></li>
+  <li><a href="https://docs.python.org/2.7/tutorial/controlflow.html#unpacking-argument-lists">Python Documentation</a></li>
 </ul>
 -->
   </div>

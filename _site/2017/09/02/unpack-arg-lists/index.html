@@ -17,13 +17,22 @@
   
   <!-- custom JS -->
   <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.0/p5.js"></script>-->
- 
+ <script src="https://use.fontawesome.com/194957a89a.js"></script>
 
   <!-- CSS -->
   <link rel="stylesheet" href="/public/css/poole.css">
   <link rel="stylesheet" href="/public/css/syntax.css">
   <link rel="stylesheet" href="/public/css/lanyon.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Latest compiled and minified CSS -->
+  <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <!-- Icons -->
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/TXCactus.png">
@@ -108,7 +117,7 @@
   <h1 class="post-title">Unpacking Argument Lists</h1>
   <p>I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have definitely helped out, but inevitably I find that said applications are lacking in some way or another.  Maybe it’s that the application does not easily allow (or possibly does not allow at all) any kind of recursive searching, does not allow ways to specify certain directories to not even bother searching, or godforbid it does allow any kind of regular expressions.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun &amp; practical.  The code is available on my <a href="http://www.github.com/stubs/py_grep_parse">GitHub</a>. (Although it may have changed some from the time of this writing).</p>
 
-<p>In a nutshell, the python script utilizes the <a href="https://docs.python.org/2/library/subprocess.html">Subprocess</a> module to make a call to grep to look for a given regular expression.  In the example, below I simply was looking for “smith” (case insensitive) in a directory appropriately named “test_data”.
+<p>In a nutshell, the python script utilizes the <a href="https://docs.python.org/2/library/subprocess.html">Subprocess</a> module to make a call to grep to look for a given regular expression.  In the example below I simply was looking for the pattern “smith” (case insensitive) in a directory appropriately named “test_data”.
 <img src="http://localhost:4000/public/unpack_arg_lists/photo0.png" alt="code0" class="center-image" /></p>
 
 <p>The results are below:

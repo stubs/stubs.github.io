@@ -8,7 +8,7 @@ excerpt: Recent real life example of having to utilize the "Splat" operator to w
 I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have definitely helped out, but inevitably I find that said applications are lacking in some way or another.  Maybe it’s that the application does not easily allow (or possibly does not allow at all) any kind of recursive searching, does not allow ways to specify certain directories to not even bother searching, or godforbid it does allow any kind of regular expressions.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun & practical.  The code is available on my [GitHub](http://www.github.com/stubs/py_grep_parse). (Although it may have changed some from the time of this writing).
 
 
-In a nutshell, the python script utilizes the [Subprocess](https://docs.python.org/2/library/subprocess.html) module to make a call to grep to look for a given regular expression.  In the example, below I simply was looking for “smith” (case insensitive) in a directory appropriately named “test_data”.
+In a nutshell, the python script utilizes the [Subprocess](https://docs.python.org/2/library/subprocess.html) module to make a call to grep to look for a given regular expression.  In the example below I simply was looking for the pattern “smith” (case insensitive) in a directory appropriately named “test_data”.
 ![code0]({{site.url}}/public/unpack_arg_lists/photo0.png){: .center-image }
 
 

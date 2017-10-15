@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Data Visualization with pandas & Dash Part 2 &middot; Aaron D. Gonzalez
+    
+  </title>
+  
+  <!-- custom JS -->
+  <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.0/p5.js"></script>-->
+ <script src="https://use.fontawesome.com/194957a89a.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Latest compiled and minified CSS -->
+  <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/TXCactus.png">
+  <link rel="shortcut icon" href="/public/TXCactus.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-89571013-1', 'auto');
+  ga('send', 'pageview');
+
+  </script>
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-item">
+        <p>I'll <i>occasionally</i> throw some personal projects and professional endeavors up here. ===></p>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a class="sidebar-nav-item" href="/">Home</a>
+        
+        
+        
+        
+            
+        
+        
+        
+            
+        
+        
+        
+            
+            <a class="sidebar-nav-item" href="/about/">About</a>
+            
+        
+        
+        
+        
+        <!--<a class="sidebar-nav-item" href="/about.html">About</a>-->
+        <a class="sidebar-nav-item" href="https://github.com/stubs">GitHub</a>
+        <span class="sidebar-nav-item">Currently v1.0.0</span>
+    </nav>
+
+    <div class="sidebar-item">
+        <p>&copy; 2017. All rights reserved.</p>
+    </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">Aaron D. Gonzalez</a>
+            <small></small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Data Visualization with pandas & Dash Part 2</h1>
+  <p>In my last <a href="https://stubs.github.io/2017/07/10/dash/">post</a> I went into some detail about how to use <a href="http://pandas.pydata.org">pandas</a>
+to take data stored in a flat file format (e.g. CSVs/TXTs) and perform various manipulations
+to wrangle the raw data. Pandas makes many of these various manipulations incredibly easy, but
+it can take a while to get used to their API. I would suggest taking some time to just
+dive into their documentation and user guides, or simply browse through the variety of instructional
+walkthroughs that are on Youtube. Brandon Rhodes has a great PyCon 2015 presentation entitled
+<a href="https://www.youtube.com/watch?v=5JnMutdy6Fw">Pandas From The Ground Up</a> that can get almost anybody
+up and running.</p>
+
+<p>Today, I’ll quickly show how we can quickly display our prepped data using Dash’s html &amp; core components!
+Never heard about Dash? It is a framework that is suited for anyone that wants to build data visualization
+apps with highly custom user interfaces in pure Python! To quote <a href="https://plot.ly/dash/introduction">Dash’s official website</a>:</p>
+
+<blockquote>
+  <p>Through a couple of simple patterns, Dash abstracts away all of the technologies and
+protocols that are required to build an interactive web-based application.
+Dash is simple enough that you can bind a user interface around your Python code in
+an afternoon.</p>
+</blockquote>
+
+<p>In order to follow along, you will need to make sure you have imported the following modules into
+python file.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">dash</span>
+<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="kn">as</span> <span class="nn">dcc</span>
+<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="kn">as</span> <span class="nn">html</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="kn">as</span> <span class="nn">go</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+</code></pre>
+</div>
+
+<p>First, I create an instance of a Dash object.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Next, I begin to build the <code class="highlighter-rouge">layout</code> of my application. The layout of a Dash app
+describes what the app is going to look like.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
+    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+    <span class="n">dcc</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s">"month-slider"</span><span class="p">,</span>
+        <span class="nb">min</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="nb">min</span><span class="p">(),</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="nb">max</span><span class="p">(),</span>
+        <span class="n">marks</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="n">months</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">unique</span><span class="p">()},</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="nb">min</span><span class="p">(),</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="p">),</span>
+    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+    <span class="n">html</span><span class="o">.</span><span class="n">H1</span><span class="p">([</span><span class="s">"Sales &amp; Returns 2016"</span><span class="p">],</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="p">{</span><span class="s">"textAlign"</span><span class="p">:</span> <span class="s">"center"</span><span class="p">}),</span>
+    <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s">"data-graph"</span><span class="p">,</span>
+        <span class="n">animate</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">H3</span><span class="p">([</span><span class="s">"Monthly Totals"</span><span class="p">],</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="p">{</span><span class="s">"textAlign"</span><span class="p">:</span> <span class="s">"center"</span><span class="p">}),</span>
+        <span class="n">pandas_gen_html_table</span><span class="p">(</span><span class="n">month_df</span><span class="p">)</span>
+    <span class="p">]),</span>
+<span class="p">],</span>
+<span class="n">className</span> <span class="o">=</span> <span class="s">"container"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>There is a lot to unpack here…much more than I am going to go into in this post, but to summarize,
+the <code class="highlighter-rouge">dash_html_components</code> library provides numerous classes for many of the well-known HTML tags
+and keyword arguments.</p>
+
+<p>To give a quick visual example, the python code above produces the following HTML tags
+(the tags have been collapsed to make the HTML model the python code as much as possible).</p>
+
+<p><img src="http://localhost:4000/public/dash/dash2html.png" alt="Dash to HTML" class="center-image" /></p>
+
+<p>Once I have established the general HTML structure of the page, I begin to build the
+code that is going to be driving the interactivity of our application.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="nd">@app.callback</span><span class="p">(</span>
+    <span class="n">dash</span><span class="o">.</span><span class="n">dependencies</span><span class="o">.</span><span class="n">Output</span><span class="p">(</span><span class="s">"data-graph"</span><span class="p">,</span> <span class="s">"figure"</span><span class="p">),</span>
+    <span class="p">[</span><span class="n">dash</span><span class="o">.</span><span class="n">dependencies</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="s">"month-slider"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">)])</span>
+<span class="k">def</span> <span class="nf">update_df_graph</span><span class="p">(</span><span class="n">in_month</span><span class="p">):</span>
+    <span class="n">traces</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_df</span><span class="o">.</span><span class="n">orderstatus</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">df_by_status</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="n">data_df</span><span class="o">.</span><span class="n">orderstatus</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="s">"returned"</span><span class="p">:</span>
+            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">df_by_status</span><span class="p">[</span><span class="n">df_by_status</span><span class="o">.</span><span class="n">datereturned</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">in_month</span><span class="p">]</span>
+            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">"datereturned"</span><span class="p">)[</span><span class="s">"returns"</span><span class="p">]</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+            <span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">returns</span><span class="p">,</span>
+                <span class="n">mode</span> <span class="o">=</span> <span class="s">"lines+markers"</span><span class="p">,</span>
+                <span class="n">opacity</span> <span class="o">=</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">marker</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s">"line"</span><span class="p">:</span> <span class="p">{</span><span class="s">"width"</span><span class="p">:</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="s">"color"</span><span class="p">:</span> <span class="s">"white"</span><span class="p">},</span>
+                    <span class="s">"symbol"</span><span class="p">:</span> <span class="s">"square"</span>
+                <span class="p">},</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">df_by_status</span><span class="p">[</span><span class="n">df_by_status</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">in_month</span><span class="p">]</span>
+            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">"dateordered"</span><span class="p">)[</span><span class="s">"orders"</span><span class="p">]</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+            <span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">orders</span><span class="p">,</span>
+                <span class="n">mode</span> <span class="o">=</span> <span class="s">"lines+markers"</span><span class="p">,</span>
+                <span class="n">opacity</span> <span class="o">=</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">marker</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s">"line"</span><span class="p">:</span> <span class="p">{</span><span class="s">"width"</span><span class="p">:</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="s">"color"</span><span class="p">:</span> <span class="s">"white"</span><span class="p">},</span>
+                    <span class="s">"symbol"</span><span class="p">:</span> <span class="s">"201"</span>
+                <span class="p">},</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">"data"</span> <span class="p">:</span> <span class="n">traces</span><span class="p">,</span>
+        <span class="s">"layout"</span> <span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s">"Returns &amp; Orders by Month"</span><span class="p">,</span>
+            <span class="n">xaxis</span><span class="o">=</span><span class="p">{</span><span class="s">"range"</span><span class="p">:</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)],</span> <span class="s">"type"</span><span class="p">:</span> <span class="s">"date"</span><span class="p">,</span> <span class="s">"title"</span><span class="p">:</span> <span class="s">"Date"</span><span class="p">},</span>
+            <span class="n">yaxis</span> <span class="o">=</span> <span class="p">{</span><span class="s">"type"</span><span class="p">:</span> <span class="s">"Linear"</span><span class="p">,</span> <span class="s">"title"</span><span class="p">:</span> <span class="s">"# of Transactions"</span><span class="p">},</span>
+            <span class="n">legend</span> <span class="o">=</span> <span class="p">{</span><span class="s">"x"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"y"</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">hovermode</span> <span class="o">=</span> <span class="s">"closest"</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Let’s break this excerpt down! The decorator will be ignored for now, and we’ll start with the
+update_df_graph function definition. As detailed in the first part of this series, our <code class="highlighter-rouge">data_df</code>
+dataframe currently has the following columns:</p>
+
+<p><img src="http://localhost:4000/public/dash/dataframe2.png" alt="dataframe2" class="center-image" /></p>
+
+<p>The function will take an integer value representing a Month. This month integer will be used
+to filter the dataframe by the given month, and create two dataframes that sum returns and orders
+grouped by their date. Each of these resulting dataframes are then used to populate
+a Scatter plot object (a class of a Dash <code class="highlighter-rouge">graph_objs</code>) which is then appended to a list of
+Scatter plot objects <code class="highlighter-rouge">traces</code>. For each of these Scatter plot objects I chose
+to plot the respective dates (either “dateordered” or “datereturned”) on the X axis
+, and the amount of “orders” or “returns” on the Y axis.</p>
+
+<p><code class="highlighter-rouge">mode</code>, <code class="highlighter-rouge">opacity</code>, <code class="highlighter-rouge">marker</code>, <code class="highlighter-rouge">name</code> attributes let a user define what kind of style the plot
+should be implemented with. For example, when plotting the returns data, I chose to use have my
+individual points connected by a line, and my actual points are to be square-shaped.</p>
+
+<p>Lastly, the function will return a dictionary that has two keys: <code class="highlighter-rouge">data</code> and <code class="highlighter-rouge">layout</code>. The <code class="highlighter-rouge">layout</code>
+value will detail how the graph is going to look (e.g. which data is on the X &amp; Y axes, whether
+or not I want the graph object to be titled, etc.), and the <code class="highlighter-rouge">data</code> value will be graphed
+<strong><em>ONTO</em></strong> the graph described by the <code class="highlighter-rouge">layout</code> value.</p>
+
+<p>There, now that we have the quick function walkthrough out of the way we can discuss the use of
+the <code class="highlighter-rouge">@</code> decorator immediately prior to our <code class="highlighter-rouge">update_df_graph</code>. This decorator is essentially what
+allows our graph to be dynamically updated based on the user’s interactions with the Slider object
+in our <code class="highlighter-rouge">app.layout</code> object. In Dash, the inputs and outputs of an application are the properties
+of a particular component. In this example, our input is the “value” property of the component
+that has the ID “month-slider”. Our output is the “figure” property of the component with the ID
+“data-graph”. You probably have noticed that I did not set a “figure” property of the
+“data-graph” component in my <code class="highlighter-rouge">layout</code>, this is because when the Dash app starts, it
+automatically calls all of the callbacks with the initial values of the input components in
+order to populate the initial state of the output components. For example, if I had specified
+something like <code class="highlighter-rouge">html.Div(id='data-graph')</code> with a “figure” property to start, it would get
+overwritten when the app starts. In this application the initial output in the “data-graph” component
+was explicitly defined in the our <code class="highlighter-rouge">layout</code> code.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">value</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="nb">min</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p><a href="https://en.wikipedia.org/wiki/Reactive_programming"><strong>Reactive Programming</strong></a>!
+Pretty neat stuff.</p>
+
+<hr />
+<h3 id="related-links">Related Links:</h3>
+<ul>
+  <li><a href="https://plot.ly/dash/">Dash User Guide</a></li>
+  <li><a href="https://plot.ly/dash/gallery">Dash App Gallery</a></li>
+</ul>
+
+
+</div>
+<!--<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="//2017/09/02/unpack-arg-lists/">
+            Unpacking Argument Lists
+            <small>02 Sep 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2017/07/10/dash/">
+            Data Visualization with pandas & Dash
+            <small>10 Jul 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2017/04/10/Virtualenv/">
+            Virtualenv with Python
+            <small>10 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2016/04/30/Playing-around-with-p5/">
+            Playing around with P5.js
+            <small>30 Apr 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

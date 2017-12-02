@@ -5,10 +5,10 @@ image: https://stubs.github.io/public/unpack_arg_lists/excerpt_photo.png
 excerpt: Recent real life example of having to utilize the "Splat" operator to work with variable length lists that are to be input to methods that require separate positional arguments.
 ---
 
-I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have definitely helped out, but inevitably I find that said applications are lacking in some way or another.  Maybe it’s that the application does not easily allow (or possibly does not allow at all) any kind of recursive searching, does not allow ways to specify certain directories to not even bother searching, or godforbid it does allow any kind of regular expressions.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun & practical.  The code is available on my [GitHub](http://www.github.com/stubs/py_grep_parse). (Although it may have changed some from the time of this writing).
+I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have helped out, but inevitably I found that said applications are lacking in some way or another.  Maybe it’s that the application did not easily allow any kind of recursive searching, did not allow ways to specify certain directories to not even bother searching, or (godforbid!) it did not allow any kind of regular expression use.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun & practical.  The code is available on my [GitHub](http://www.github.com/stubs/py_grep_parse) (although it may have changed some from the time of this writing).
 
 
-In a nutshell, the python script utilizes the [Subprocess](https://docs.python.org/2/library/subprocess.html) module to make a call to grep to look for a given regular expression.  In the example below I simply was looking for the pattern “smith” (case insensitive) in a directory appropriately named “test_data”.
+In a nutshell, the python script utilizes the [Subprocess](https://docs.python.org/2/library/subprocess.html) module to call grep to look for a given regular expression.  In the example below I simply was looking for the pattern “smith” (case insensitive) in a directory appropriately named “test_data”.
 ![code0]({{site.url}}/public/unpack_arg_lists/photo0.png){: .center-image }
 
 
@@ -16,10 +16,11 @@ The results are below:
 ![code1]({{site.url}}/public/unpack_arg_lists/photo1.png){: .center-image }
 
 
-“Great!”, I thought.  Now I can make a `head` call to gather the given file’s column headers.  Seems simple enough. In this case, my test data was all in one directory (which was my first mistake) appropriately name “/test_data”, so I did not think much of how to accomplish this task.
+“Great!”, I thought.  Now I can make a `head` call to gather the given file’s column headers.  Seems simple enough. In this case, my test data was all in one directory appropriately name “test_data”, so I did not think much of how to accomplish this task. We can use make a `head -1` call using the same Subprocess module
+to collect the first row from the files we are working with (assuming that the files have column headers in the first row).
 
 
-Before I can make the `head -1` call to gather the first row of a file, I need to first parse the path to the file from the data yielded in the first column (as shown above). Lastly, I can pass the individual variables client & file_name to the `os.path.join()` method to get a intelligently joined path. :
+Before I can make the `head -1` call, I need to first parse the path to the file from the data yielded in the first column (as shown above). Lastly, I can pass the individual variables client & file_name to the `os.path.join()` method to get a intelligently joined path. :
 ![code2]({{site.url}}/public/unpack_arg_lists/photo2.png){: .center-image }
 
 
@@ -28,7 +29,7 @@ Well what if your grep search finds hits at different depths of recursion?  For 
 ![code3]({{site.url}}/public/unpack_arg_lists/photo3.png){: .center-image }
 
 
-Unfortunately, `os.path.join()` is a function call requiring separate positional arguments.  This means one cannot simply create a list of all the different directories that construct the path to work with and pass that into `os.path.join()`.
+Unfortunately, `os.path.join()` is a function call requiring separate positional arguments.  This means one cannot simply create a list of strings that are to be joined by `os.path.join()` to create the path to a file to pull headers for.
 ![code4]({{site.url}}/public/unpack_arg_lists/photo4.png){: .center-image }
 
 
@@ -44,4 +45,4 @@ Utilizing the almighty * I was able to easily grep files for a regex pattern & p
 
 
 ### Related Links:
-* [Python Documentation](https://docs.python.org/2.7/tutorial/controlflow.html#unpacking-argument-lists)
+* [Python 2.7 Documentation](https://docs.python.org/2.7/tutorial/controlflow.html#unpacking-argument-lists)

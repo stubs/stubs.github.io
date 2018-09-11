@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>Aaron D. Gonzalez</title>
- <link href="http://localhost:4000/atom.xml" rel="self"/>
- <link href="http://localhost:4000/"/>
- <updated>2017-10-14T21:37:59-04:00</updated>
- <id>http://localhost:4000</id>
+ <link href="http://stubs.github.io/atom.xml" rel="self"/>
+ <link href="http://stubs.github.io/"/>
+ <updated>2018-09-10T22:14:09-04:00</updated>
+ <id>http://stubs.github.io</id>
  <author>
    <name>Aaron D. Gonzalez</name>
    <email>a.gonzalez979@gmail.com</email>
@@ -13,10 +13,40 @@
 
  
  <entry>
+   <title>Read Files on AWS S3 Without Copying As A Local File</title>
+   <link href="http://stubs.github.io/2018/05/24/aws-s3-cp/"/>
+   <updated>2018-05-24T00:00:00-04:00</updated>
+   <id>http://stubs.github.io/2018/05/24/aws-s3-cp</id>
+   <content type="html">&lt;p&gt;Lots of people use Amazon’s S3 buckets. I tend to use them to save some random csv
+data to look play around with later.  Every once and a while I’d come across a different key path in one of my S3 buckets
+and just be completely puzzled as to what kind of stuff I had placed in there.  Selecting a file and taking
+a look isn’t terribly hard.  Essentially, I would &lt;code class=&quot;highlighter-rouge&quot;&gt;aws s3 cp&lt;/code&gt; the file from the s3 bucket to my local machine.
+From there, one can use any variety of Unix tools to get a better idea of the data contained in said file.
+See…pretty simple, but it got annoying having to eventually remove the copied local file after I would
+look through it and see that its contents were not what I was looking for.&lt;/p&gt;
+
+&lt;p&gt;For a while I simply cursed the heavens for the lack of AWS S3 commands that would perform similarly to the way
+&lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; does.  These were truly &lt;em&gt;hard times&lt;/em&gt;. Fortunately, I was pleasantly surprised that this behavior could still
+be recreated without having to actually create a local version of the s3 file to your file system.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;aws s3 cp &amp;lt;S3Uri&amp;gt; -&lt;/code&gt; will allow you to skip copying the file to your local machine prior to checking inside with
+&lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;tail&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt;, etc.&lt;/p&gt;
+
+&lt;p&gt;Let’s see it in action by peeking into some &lt;a href=&quot;https://registry.opendata.aws/amazon-reviews/&quot;&gt;Amazon customer review data&lt;/a&gt;
+that is stored in a public S3 bucket.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;aws s3 &lt;span class=&quot;nb&quot;&gt;cp &lt;/span&gt;s3://amazon-reviews-pds/tsv/amazon_reviews_us_Software_v1_00.tsv.gz - | &lt;span class=&quot;nb&quot;&gt;gunzip&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;head&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/unpack_arg_lists/photo3.png&quot; alt=&quot;code3&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Data Visualization with pandas & Dash Part 2</title>
-   <link href="http://localhost:4000/2017/10/13/dash2/"/>
+   <link href="http://stubs.github.io/2017/10/13/dash2/"/>
    <updated>2017-10-13T00:00:00-04:00</updated>
-   <id>http://localhost:4000/2017/10/13/dash2</id>
+   <id>http://stubs.github.io/2017/10/13/dash2</id>
    <content type="html">&lt;p&gt;In my last &lt;a href=&quot;https://stubs.github.io/2017/07/10/dash/&quot;&gt;post&lt;/a&gt; I went into some detail about how to use &lt;a href=&quot;http://pandas.pydata.org&quot;&gt;pandas&lt;/a&gt;
 to take data stored in a flat file format (e.g. CSVs/TXTs) and perform various manipulations
 to wrangle the raw data. Pandas makes many of these various manipulations incredibly easy, but
@@ -40,26 +70,24 @@ an afternoon.&lt;/p&gt;
 &lt;p&gt;In order to follow along, you will need to make sure you have imported the following modules into
 python file.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dash&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dash_core_components&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dcc&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dash_html_components&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;html&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pd&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;plotly.graph_objs&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;go&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dash_core_components&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dcc&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dash_html_components&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;plotly.graph_objs&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;go&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;datetime&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;First, I create an instance of a Dash object.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Next, I begin to build the &lt;code class=&quot;highlighter-rouge&quot;&gt;layout&lt;/code&gt; of my application. The layout of a Dash app
 describes what the app is going to look like.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Br&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;dcc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Slider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
         &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;month-slider&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
@@ -82,8 +110,7 @@ describes what the app is going to look like.&lt;/p&gt;
     &lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;className&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;container&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;There is a lot to unpack here…much more than I am going to go into in this post, but to summarize,
 the &lt;code class=&quot;highlighter-rouge&quot;&gt;dash_html_components&lt;/code&gt; library provides numerous classes for many of the well-known HTML tags
@@ -92,12 +119,12 @@ and keyword arguments.&lt;/p&gt;
 &lt;p&gt;To give a quick visual example, the python code above produces the following HTML tags
 (the tags have been collapsed to make the HTML model the python code as much as possible).&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/public/dash/dash2html.png&quot; alt=&quot;Dash to HTML&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/dash/dash2html.png&quot; alt=&quot;Dash to HTML&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Once I have established the general HTML structure of the page, I begin to build the
 code that is going to be driving the interactivity of our application.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@app.callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@app.callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;dash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dependencies&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;data-graph&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;figure&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dependencies&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;month-slider&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;update_df_graph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;in_month&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
@@ -143,14 +170,13 @@ code that is going to be driving the interactivity of our application.&lt;/p&gt;
             &lt;span class=&quot;n&quot;&gt;hovermode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;closest&quot;&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Let’s break this excerpt down! The decorator will be ignored for now, and we’ll start with the
 update_df_graph function definition. As detailed in the first part of this series, our &lt;code class=&quot;highlighter-rouge&quot;&gt;data_df&lt;/code&gt;
 dataframe currently has the following columns:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/public/dash/dataframe2.png&quot; alt=&quot;dataframe2&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/dash/dataframe2.png&quot; alt=&quot;dataframe2&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The function will take an integer value representing a Month. This month integer will be used
 to filter the dataframe by the given month, and create two dataframes that sum returns and orders
@@ -183,9 +209,8 @@ something like &lt;code class=&quot;highlighter-rouge&quot;&gt;html.Div(id='data
 overwritten when the app starts. In this application the initial output in the “data-graph” component
 was explicitly defined in the our &lt;code class=&quot;highlighter-rouge&quot;&gt;layout&lt;/code&gt; code.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dateordered&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;month&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dateordered&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;month&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Reactive_programming&quot;&gt;&lt;strong&gt;Reactive Programming&lt;/strong&gt;&lt;/a&gt;!
 Pretty neat stuff.&lt;/p&gt;
@@ -202,50 +227,51 @@ Pretty neat stuff.&lt;/p&gt;
  
  <entry>
    <title>Unpacking Argument Lists</title>
-   <link href="http://localhost:4000/2017/09/02/unpack-arg-lists/"/>
+   <link href="http://stubs.github.io/2017/09/02/unpack-arg-lists/"/>
    <updated>2017-09-02T00:00:00-04:00</updated>
-   <id>http://localhost:4000/2017/09/02/unpack-arg-lists</id>
-   <content type="html">&lt;p&gt;I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have definitely helped out, but inevitably I find that said applications are lacking in some way or another.  Maybe it’s that the application does not easily allow (or possibly does not allow at all) any kind of recursive searching, does not allow ways to specify certain directories to not even bother searching, or godforbid it does allow any kind of regular expressions.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun &amp;amp; practical.  The code is available on my &lt;a href=&quot;http://www.github.com/stubs/py_grep_parse&quot;&gt;GitHub&lt;/a&gt;. (Although it may have changed some from the time of this writing).&lt;/p&gt;
+   <id>http://stubs.github.io/2017/09/02/unpack-arg-lists</id>
+   <content type="html">&lt;p&gt;I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have helped out, but inevitably I found that said applications are lacking in some way or another.  Maybe it’s that the application did not easily allow any kind of recursive searching, did not allow ways to specify certain directories to not even bother searching, or (godforbid!) it did not allow any kind of regular expression use.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun &amp;amp; practical.  The code is available on my &lt;a href=&quot;http://www.github.com/stubs/py_grep_parse&quot;&gt;GitHub&lt;/a&gt; (although it may have changed some from the time of this writing).&lt;/p&gt;
 
-&lt;p&gt;In a nutshell, the python script utilizes the &lt;a href=&quot;https://docs.python.org/2/library/subprocess.html&quot;&gt;Subprocess&lt;/a&gt; module to make a call to grep to look for a given regular expression.  In the example below I simply was looking for the pattern “smith” (case insensitive) in a directory appropriately named “test_data”.
-&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo0.png&quot; alt=&quot;code0&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;In a nutshell, the python script utilizes the &lt;a href=&quot;https://docs.python.org/2/library/subprocess.html&quot;&gt;Subprocess&lt;/a&gt; module to call grep to look for a given regular expression.  In the example below I simply was looking for the pattern “smith” (case insensitive) in a directory appropriately named “test_data”.
+&lt;img src=&quot;http://stubs.github.io/public/unpack_arg_lists/photo0.png&quot; alt=&quot;code0&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The results are below:
-&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo1.png&quot; alt=&quot;code1&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;http://stubs.github.io/public/unpack_arg_lists/photo1.png&quot; alt=&quot;code1&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;“Great!”, I thought.  Now I can make a &lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt; call to gather the given file’s column headers.  Seems simple enough. In this case, my test data was all in one directory (which was my first mistake) appropriately name “/test_data”, so I did not think much of how to accomplish this task.&lt;/p&gt;
+&lt;p&gt;“Great!”, I thought.  Now I can make a &lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt; call to gather the given file’s column headers.  Seems simple enough. In this case, my test data was all in one directory appropriately name “test_data”, so I did not think much of how to accomplish this task. We can use make a &lt;code class=&quot;highlighter-rouge&quot;&gt;head -1&lt;/code&gt; call using the same Subprocess module
+to collect the first row from the files we are working with (assuming that the files have column headers in the first row).&lt;/p&gt;
 
-&lt;p&gt;Before I can make the &lt;code class=&quot;highlighter-rouge&quot;&gt;head -1&lt;/code&gt; call to gather the first row of a file, I need to first parse the path to the file from the data yielded in the first column (as shown above). Lastly, I can pass the individual variables client &amp;amp; file_name to the &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt; method to get a intelligently joined path. :
-&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo2.png&quot; alt=&quot;code2&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;Before I can make the &lt;code class=&quot;highlighter-rouge&quot;&gt;head -1&lt;/code&gt; call, I need to first parse the path to the file from the data yielded in the first column (as shown above). Lastly, I can pass the individual variables client &amp;amp; file_name to the &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt; method to get a intelligently joined path. :
+&lt;img src=&quot;http://stubs.github.io/public/unpack_arg_lists/photo2.png&quot; alt=&quot;code2&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;complicating-stuff&quot;&gt;COMPLICATING STUFF&lt;/h3&gt;
 &lt;p&gt;Well what if your grep search finds hits at different depths of recursion?  For instance, what if the directory containing all the data I wished to grep looked something like this:
-&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo3.png&quot; alt=&quot;code3&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;http://stubs.github.io/public/unpack_arg_lists/photo3.png&quot; alt=&quot;code3&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Unfortunately, &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt; is a function call requiring separate positional arguments.  This means one cannot simply create a list of all the different directories that construct the path to work with and pass that into &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt;.
-&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo4.png&quot; alt=&quot;code4&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;Unfortunately, &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt; is a function call requiring separate positional arguments.  This means one cannot simply create a list of strings that are to be joined by &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt; to create the path to a file to pull headers for.
+&lt;img src=&quot;http://stubs.github.io/public/unpack_arg_lists/photo4.png&quot; alt=&quot;code4&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This puzzled me for a while, but rather than immediately try to start coding a solution I made myself take a quick break and grab a coffee.  I had a feeling I had stumbled across something similar when I was reading through every Python text book I could find (back when I was reading a lot more than actually writing).&lt;/p&gt;
 
 &lt;p&gt;Sure enough I remembered reading about how to denote functions that could be called with arbitrary arguments lists using the “*” character. The same character can also unpack arguments that are already in a list or tuple to be used for a function call that needs separate arguments….like &lt;code class=&quot;highlighter-rouge&quot;&gt;os.path.join()&lt;/code&gt;!
-&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo5.png&quot; alt=&quot;code5&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;http://stubs.github.io/public/unpack_arg_lists/photo5.png&quot; alt=&quot;code5&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Utilizing the almighty * I was able to easily grep files for a regex pattern &amp;amp; pull header rows for any files that were reported as having matches by my previous grep call with one python script.
-&lt;img src=&quot;http://localhost:4000/public/unpack_arg_lists/photo6.png&quot; alt=&quot;code6&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;http://stubs.github.io/public/unpack_arg_lists/photo6.png&quot; alt=&quot;code6&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;related-links&quot;&gt;Related Links:&lt;/h3&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.python.org/2.7/tutorial/controlflow.html#unpacking-argument-lists&quot;&gt;Python Documentation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.python.org/2.7/tutorial/controlflow.html#unpacking-argument-lists&quot;&gt;Python 2.7 Documentation&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content>
  </entry>
  
  <entry>
    <title>Data Visualization with pandas & Dash</title>
-   <link href="http://localhost:4000/2017/07/10/dash/"/>
+   <link href="http://stubs.github.io/2017/07/10/dash/"/>
    <updated>2017-07-10T00:00:00-04:00</updated>
-   <id>http://localhost:4000/2017/07/10/dash</id>
-   <content type="html">&lt;p&gt;&lt;img src=&quot;http://localhost:4000/public/dash/dash_app.png&quot; alt=&quot;my screenshot&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+   <id>http://stubs.github.io/2017/07/10/dash</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/dash/dash_app.png&quot; alt=&quot;my screenshot&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Anytime I have a chance to make something visual out of my work I jump at the
 opportunity. I recently had some free time on my hands, and lo and behold I also had my
@@ -266,15 +292,14 @@ is available on my GitHub at:&lt;/p&gt;
 &lt;p&gt;As I mentioned, we are going to be using pandas and Dash (and a few other packages)
 for this lesson.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/usr/bin/env python&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dash&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dash_core_components&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dcc&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dash_html_components&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;html&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pd&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;plotly.graph_objs&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;go&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dash_core_components&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dcc&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dash_html_components&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;plotly.graph_objs&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;go&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;datetime&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;I hope by now that many (if not all) of y’all have already had your
 ears talked off with the wealth of blog posts, PyCon tutorials, etc lauding pandas for
@@ -287,11 +312,10 @@ increase my productivity when it comes to working with CSV/Excel data.&lt;/p&gt;
 Dataframe object (one of two data structures that pandas brings to Python). For brevity,
 I am only going to be showing a portion of the 213 rows that are in this xlsx file.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#read in excel data&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#read in excel data&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_excel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;data/aug_dec_2016.xlsx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/public/dash/dataframe.png&quot; alt=&quot;dataframe&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/dash/dataframe.png&quot; alt=&quot;dataframe&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;For those of you wondering about the “NaT” value in some of the cells, we can
 read those cells as having no value entered in them. They are essentially NULL.&lt;/p&gt;
@@ -303,24 +327,22 @@ the date column. Under the second comment in the code snippet below, we can see 
 I am &lt;em&gt;applying&lt;/em&gt; that lambda function to the “dateordered” and “datereturned” columns
 in our dataframe.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#lambda function to get monthly periods from date fields&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#lambda function to get monthly periods from date fields&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;to_string&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
 
 &lt;span class=&quot;c&quot;&gt;#add monthly period columns as per directions&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'period'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dateordered&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'rperiod'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;datereturned&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;I just recently discovered the pandas &lt;code class=&quot;highlighter-rouge&quot;&gt;where&lt;/code&gt; statement for adding a touch of conditional
 flare to manipulating our data. Let’s look at the code first and then we’ll step through
 what the details.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#add returns column to separate true orders from true returns&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#add returns column to separate true orders from true returns&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'returns'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orders&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orderstatus&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'returned'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'orders'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orders&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orderstatus&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'complete'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Let’s use the first line from directly above as our example. In plain English,
 we are adding a new column named “returns” to our dataframe object. Looking to
@@ -335,17 +357,16 @@ around and doing it once more, except this time I set anything in the “orders�
 that did not have an “orderstatus” equal to “complete” to 0. I am left with a
 dataframe that is much easier to work with (in my opinion).&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/public/dash/dataframe2.png&quot; alt=&quot;dataframe2&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/dash/dataframe2.png&quot; alt=&quot;dataframe2&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Great! Our dataframe object now has clearly labeled columns for orders AND returns
 instead of having everything simply in the “orders” column.  Now let us make 2 new dataframes
 by selecting only certain columns we need from our original.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#make new dataframes for returns &amp;amp; orders&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#make new dataframes for returns &amp;amp; orders&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;returns&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;rperiod&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;returns&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;copy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;orders&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;period&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;orders&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;copy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;To actually do this with pandas, we simply need to pass a list of the columns we require from
 the original dataframe. You will also notice that I am appending a &lt;code class=&quot;highlighter-rouge&quot;&gt;.copy()&lt;/code&gt; as well.
@@ -353,14 +374,13 @@ In pandas, indexing a dataframe returns a reference to the initial dataframe.
 Thus, changing the subset will change the initial dataframe. This &lt;code class=&quot;highlighter-rouge&quot;&gt;.copy()&lt;/code&gt; will
 make these new dataframes independent of the original.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#rename column&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#rename column&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;returns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;columns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;rperiod&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;period&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inplace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
 &lt;span class=&quot;c&quot;&gt;#group by periods and sum&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;returns&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;returns&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;returns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;period&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;NaT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;period&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;returns&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reset_index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;orders&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;orders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orders&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;period&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;NaT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;period&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;orders&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reset_index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;We are nearing the home stretch! The two new dataframes that we created in the
 previous step are going to eventually be merged together into a single dataframe.
@@ -379,32 +399,29 @@ two function calls we are stating we want our returned object to be a dataframe
 (not a series) and that we want the period column to not be an index for the dataframe.
 What we get is a set of nice, neat, dataframes of the sums of returns and orders.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/public/dash/returns_sums.png&quot; alt=&quot;returns sums&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/dash/returns_sums.png&quot; alt=&quot;returns sums&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#merge the two new dataframes&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#merge the two new dataframes&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;returns&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;orders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;how&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;outer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;period&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fillna&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we can combine our returns and orders dataframes together. In pandas this is called merging. This is similar to joining in SQL.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/public/dash/month_totals_df.png&quot; alt=&quot;returns sums&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/dash/month_totals_df.png&quot; alt=&quot;returns sums&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#add return rate computed columns&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#add return rate computed columns&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;return_rate&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;returns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orders&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;return_rate_percentage&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;returns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orders&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;return_rate_percentage&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;return_rate_percentage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;return_rate_&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;_delta&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;return_rate_percentage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;return_rate_percentage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;return_rate_percentage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;return_rate_&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;_delta&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;return_rate_&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;_delta&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;While we are at it, let us add in some additional columns to see how the rate of returns varies for each monthly period.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#output to excel&lt;/span&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#output to excel&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;month_df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_excel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;data/results.xlsx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Lastly, output the merged dataframe to an excel file.&lt;/p&gt;
 
@@ -413,7 +430,7 @@ What we get is a set of nice, neat, dataframes of the sums of returns and orders
 &lt;p&gt;OK, in the next post we’ll get to how we can create reactive data visualizations for the dataframes we have just worked with to end up with
 something similar to what you see below!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://localhost:4000/public/dash/dash_animation.gif&quot; alt=&quot;my gif&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/dash/dash_animation.gif&quot; alt=&quot;my gif&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;related-links&quot;&gt;Related Links:&lt;/h3&gt;
 &lt;ul&gt;
@@ -426,9 +443,9 @@ something similar to what you see below!&lt;/p&gt;
  
  <entry>
    <title>Virtualenv with Python</title>
-   <link href="http://localhost:4000/2017/04/10/Virtualenv/"/>
+   <link href="http://stubs.github.io/2017/04/10/Virtualenv/"/>
    <updated>2017-04-10T00:00:00-04:00</updated>
-   <id>http://localhost:4000/2017/04/10/Virtualenv</id>
+   <id>http://stubs.github.io/2017/04/10/Virtualenv</id>
    <content type="html">&lt;p&gt;I was a late comer to the the whole virtual environment thing with Python, and 
 to be completely honest I have yet to come across any of the potential issues 
 that I see cited by everyone as reasons to use them. This being said, I have still developed some 
@@ -460,30 +477,27 @@ available in the virtualenv you install them to.&lt;/p&gt;
 &lt;h3 id=&quot;installing-virtualenv&quot;&gt;Installing virtualenv&lt;/h3&gt;
 &lt;p&gt;Assuming you already have &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt; installed, you are going to want to install virtualenv globally.&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install virtualenv
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;virtualenv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;creating-a-virtualenv&quot;&gt;Creating a virtualenv&lt;/h3&gt;
 &lt;p&gt;Next, simply cd into the directory you are going to work in. In my example I am going to 
 go all &lt;em&gt;Inception&lt;/em&gt; and create a virtualenv inside my project directory named…. “vrtlenv”.&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/dev/vrtlenv
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;virtualenv env
-New python executable &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; ~/dev/vrtlenv/env/bin/python2.7
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/dev/vrtlenv
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;virtualenv &lt;span class=&quot;nb&quot;&gt;env
+&lt;/span&gt;New python executable &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; ~/dev/vrtlenv/env/bin/python2.7
 Also creating executable &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; ~/dev/vrtlenv/env/bin/python
 Installing setuptools, pip, wheel...done.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;virtualenv env&lt;/code&gt; bit is creating a virtual environment to a directory named “env”. It is 
 not required that you name it “env”, but it is convention. Also, I would like others looking at 
 a project I have started to have to do as little as possible to continue to work. Moving on, to actually 
 step into the new virtual environment you need to &lt;em&gt;activate&lt;/em&gt; it.&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;env/bin/activate
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source env&lt;/span&gt;/bin/activate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;You’ll be able to tell that you are in said virtual environment because there will
 now be &lt;code class=&quot;highlighter-rouge&quot;&gt;(env)&lt;/code&gt; prepended to the start of your command line prompt (if you chose
@@ -520,9 +534,9 @@ just to save myself the hassle of having to avoid cleaning up my requirements.tx
  
  <entry>
    <title>Playing around with P5.js</title>
-   <link href="http://localhost:4000/2016/04/30/Playing-around-with-p5/"/>
+   <link href="http://stubs.github.io/2016/04/30/Playing-around-with-p5/"/>
    <updated>2016-04-30T00:00:00-04:00</updated>
-   <id>http://localhost:4000/2016/04/30/Playing-around-with-p5</id>
+   <id>http://stubs.github.io/2016/04/30/Playing-around-with-p5</id>
    <content type="html">&lt;p&gt;I recently traveled out west to see an old buddy of mine.  L.A. always seems to open my eyes up to new things.  While there this time, I was introduced to Processing and P5.js.  This might need a little bit of back story, but let me preface everything that follows by stating that I am a pretty boring dude.  I like numbers and textbooks, but seeing what kind of visual stuff was easily possible left a lasting impression on me.&lt;/p&gt;
 
 &lt;p&gt;I (after watching a few youtube videos by Dan Shiffman working in &lt;a href=&quot;https://processing.org&quot;&gt;Processing&lt;/a&gt;) was able to create the following purple rain example using the P5.js library.  Initially, I was not really looking forward to working with Javascript, but having something THIS visual helped to get me excited about the entire process. Well…that, and some of the interactive stuff others were doing incorporating other peripherals like the Kinect.&lt;/p&gt;

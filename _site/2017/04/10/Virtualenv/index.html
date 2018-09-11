@@ -89,13 +89,17 @@
         
         
         
+        
+            
+        
+        
         <!--<a class="sidebar-nav-item" href="/about.html">About</a>-->
         <a class="sidebar-nav-item" href="https://github.com/stubs">GitHub</a>
         <span class="sidebar-nav-item">Currently v1.0.0</span>
     </nav>
 
     <div class="sidebar-item">
-        <p>&copy; 2017. All rights reserved.</p>
+        <p>&copy; 2018. All rights reserved.</p>
     </div>
 </div>
 
@@ -146,30 +150,27 @@ available in the virtualenv you install them to.</p>
 <h3 id="installing-virtualenv">Installing virtualenv</h3>
 <p>Assuming you already have <code class="highlighter-rouge">pip</code> installed, you are going to want to install virtualenv globally.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>pip install virtualenv
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>virtualenv
+</code></pre></div></div>
 
 <h3 id="creating-a-virtualenv">Creating a virtualenv</h3>
 <p>Next, simply cd into the directory you are going to work in. In my example I am going to 
 go all <em>Inception</em> and create a virtualenv inside my project directory named…. “vrtlenv”.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">cd</span> ~/dev/vrtlenv
-<span class="gp">$ </span>virtualenv env
-New python executable <span class="k">in</span> ~/dev/vrtlenv/env/bin/python2.7
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> ~/dev/vrtlenv
+<span class="nv">$ </span>virtualenv <span class="nb">env
+</span>New python executable <span class="k">in</span> ~/dev/vrtlenv/env/bin/python2.7
 Also creating executable <span class="k">in</span> ~/dev/vrtlenv/env/bin/python
 Installing setuptools, pip, wheel...done.
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The <code class="highlighter-rouge">virtualenv env</code> bit is creating a virtual environment to a directory named “env”. It is 
 not required that you name it “env”, but it is convention. Also, I would like others looking at 
 a project I have started to have to do as little as possible to continue to work. Moving on, to actually 
 step into the new virtual environment you need to <em>activate</em> it.</p>
 
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">source </span>env/bin/activate
-</code></pre>
-</div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">source env</span>/bin/activate
+</code></pre></div></div>
 
 <p>You’ll be able to tell that you are in said virtual environment because there will
 now be <code class="highlighter-rouge">(env)</code> prepended to the start of your command line prompt (if you chose
@@ -206,6 +207,15 @@ just to save myself the hassle of having to avoid cleaning up my requirements.tx
 <!--<div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="//2018/05/24/aws-s3-cp/">
+            Read Files on AWS S3 Without Copying As A Local File
+            <small>24 May 2018</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>

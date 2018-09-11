@@ -89,13 +89,17 @@
         
         
         
+        
+            
+        
+        
         <!--<a class="sidebar-nav-item" href="/about.html">About</a>-->
         <a class="sidebar-nav-item" href="https://github.com/stubs">GitHub</a>
         <span class="sidebar-nav-item">Currently v1.0.0</span>
     </nav>
 
     <div class="sidebar-item">
-        <p>&copy; 2017. All rights reserved.</p>
+        <p>&copy; 2018. All rights reserved.</p>
     </div>
 </div>
 
@@ -115,7 +119,7 @@
       <div class="container content">
         <div class="post">
   <h1 class="post-title">Data Visualization with pandas & Dash</h1>
-  <p><img src="http://localhost:4000/public/dash/dash_app.png" alt="my screenshot" class="center-image" /></p>
+  <p><img src="http://stubs.github.io/public/dash/dash_app.png" alt="my screenshot" class="center-image" /></p>
 
 <p>Anytime I have a chance to make something visual out of my work I jump at the
 opportunity. I recently had some free time on my hands, and lo and behold I also had my
@@ -136,15 +140,14 @@ is available on my GitHub at:</p>
 <p>As I mentioned, we are going to be using pandas and Dash (and a few other packages)
 for this lesson.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
 <span class="kn">import</span> <span class="nn">dash</span>
-<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="kn">as</span> <span class="nn">dcc</span>
-<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="kn">as</span> <span class="nn">html</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="kn">as</span> <span class="nn">go</span>
+<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="n">dcc</span>
+<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="n">html</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="n">go</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>I hope by now that many (if not all) of y’all have already had your
 ears talked off with the wealth of blog posts, PyCon tutorials, etc lauding pandas for
@@ -157,11 +160,10 @@ increase my productivity when it comes to working with CSV/Excel data.</p>
 Dataframe object (one of two data structures that pandas brings to Python). For brevity,
 I am only going to be showing a portion of the 213 rows that are in this xlsx file.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#read in excel data</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#read in excel data</span>
 <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s">"data/aug_dec_2016.xlsx"</span><span class="p">)</span>
-</code></pre>
-</div>
-<p><img src="http://localhost:4000/public/dash/dataframe.png" alt="dataframe" class="center-image" /></p>
+</code></pre></div></div>
+<p><img src="http://stubs.github.io/public/dash/dataframe.png" alt="dataframe" class="center-image" /></p>
 
 <p>For those of you wondering about the “NaT” value in some of the cells, we can
 read those cells as having no value entered in them. They are essentially NULL.</p>
@@ -173,24 +175,22 @@ the date column. Under the second comment in the code snippet below, we can see 
 I am <em>applying</em> that lambda function to the “dateordered” and “datereturned” columns
 in our dataframe.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#lambda function to get monthly periods from date fields</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#lambda function to get monthly periods from date fields</span>
 <span class="n">to_string</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)[:</span><span class="mi">7</span><span class="p">]</span>
 
 <span class="c">#add monthly period columns as per directions</span>
 <span class="n">data_df</span><span class="p">[</span><span class="s">'period'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">to_string</span><span class="p">)</span>
 <span class="n">data_df</span><span class="p">[</span><span class="s">'rperiod'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">datereturned</span><span class="o">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">to_string</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>I just recently discovered the pandas <code class="highlighter-rouge">where</code> statement for adding a touch of conditional
 flare to manipulating our data. Let’s look at the code first and then we’ll step through
 what the details.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#add returns column to separate true orders from true returns</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#add returns column to separate true orders from true returns</span>
 <span class="n">data_df</span><span class="p">[</span><span class="s">'returns'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">orders</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data_df</span><span class="o">.</span><span class="n">orderstatus</span> <span class="o">==</span> <span class="s">'returned'</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">data_df</span><span class="p">[</span><span class="s">'orders'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">orders</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data_df</span><span class="o">.</span><span class="n">orderstatus</span> <span class="o">==</span> <span class="s">'complete'</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Let’s use the first line from directly above as our example. In plain English,
 we are adding a new column named “returns” to our dataframe object. Looking to
@@ -205,17 +205,16 @@ around and doing it once more, except this time I set anything in the “orders�
 that did not have an “orderstatus” equal to “complete” to 0. I am left with a
 dataframe that is much easier to work with (in my opinion).</p>
 
-<p><img src="http://localhost:4000/public/dash/dataframe2.png" alt="dataframe2" class="center-image" /></p>
+<p><img src="http://stubs.github.io/public/dash/dataframe2.png" alt="dataframe2" class="center-image" /></p>
 
 <p>Great! Our dataframe object now has clearly labeled columns for orders AND returns
 instead of having everything simply in the “orders” column.  Now let us make 2 new dataframes
 by selecting only certain columns we need from our original.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#make new dataframes for returns &amp; orders</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#make new dataframes for returns &amp; orders</span>
 <span class="n">returns</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[[</span><span class="s">"rperiod"</span><span class="p">,</span><span class="s">"returns"</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">orders</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[[</span><span class="s">"period"</span><span class="p">,</span> <span class="s">"orders"</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>To actually do this with pandas, we simply need to pass a list of the columns we require from
 the original dataframe. You will also notice that I am appending a <code class="highlighter-rouge">.copy()</code> as well.
@@ -223,14 +222,13 @@ In pandas, indexing a dataframe returns a reference to the initial dataframe.
 Thus, changing the subset will change the initial dataframe. This <code class="highlighter-rouge">.copy()</code> will
 make these new dataframes independent of the original.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#rename column</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#rename column</span>
 <span class="n">returns</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s">"rperiod"</span><span class="p">:</span> <span class="s">"period"</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="c">#group by periods and sum</span>
 <span class="n">returns</span> <span class="o">=</span> <span class="n">returns</span><span class="p">[</span><span class="n">returns</span><span class="o">.</span><span class="n">period</span> <span class="o">&lt;&gt;</span> <span class="s">"NaT"</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">"period"</span><span class="p">)[</span><span class="s">"returns"</span><span class="p">]</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="n">orders</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[</span><span class="n">orders</span><span class="o">.</span><span class="n">period</span> <span class="o">&lt;&gt;</span> <span class="s">"NaT"</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">"period"</span><span class="p">)[</span><span class="s">"orders"</span><span class="p">]</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>We are nearing the home stretch! The two new dataframes that we created in the
 previous step are going to eventually be merged together into a single dataframe.
@@ -249,32 +247,29 @@ two function calls we are stating we want our returned object to be a dataframe
 (not a series) and that we want the period column to not be an index for the dataframe.
 What we get is a set of nice, neat, dataframes of the sums of returns and orders.</p>
 
-<p><img src="http://localhost:4000/public/dash/returns_sums.png" alt="returns sums" class="center-image" /></p>
+<p><img src="http://stubs.github.io/public/dash/returns_sums.png" alt="returns sums" class="center-image" /></p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#merge the two new dataframes</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#merge the two new dataframes</span>
 <span class="n">month_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">"outer"</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s">"period"</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Now we can combine our returns and orders dataframes together. In pandas this is called merging. This is similar to joining in SQL.</p>
 
-<p><img src="http://localhost:4000/public/dash/month_totals_df.png" alt="returns sums" class="center-image" /></p>
+<p><img src="http://stubs.github.io/public/dash/month_totals_df.png" alt="returns sums" class="center-image" /></p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#add return rate computed columns</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#add return rate computed columns</span>
 <span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="o">.</span><span class="n">returns</span><span class="o">/</span><span class="n">month_df</span><span class="o">.</span><span class="n">orders</span>
 <span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_percentage"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="o">.</span><span class="n">returns</span><span class="o">/</span><span class="n">month_df</span><span class="o">.</span><span class="n">orders</span> <span class="o">*</span> <span class="mi">100</span>
 <span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_percentage"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="o">.</span><span class="n">return_rate_percentage</span><span class="o">.</span><span class="nb">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_</span><span class="si">%</span><span class="s">_delta"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">month_df</span><span class="o">.</span><span class="n">return_rate_percentage</span> <span class="o">-</span> <span class="n">month_df</span><span class="o">.</span><span class="n">return_rate_percentage</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">month_df</span><span class="o">.</span><span class="n">return_rate_percentage</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_</span><span class="si">%</span><span class="s">_delta"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_</span><span class="si">%</span><span class="s">_delta"</span><span class="p">]</span><span class="o">.</span><span class="nb">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>While we are at it, let us add in some additional columns to see how the rate of returns varies for each monthly period.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#output to excel</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#output to excel</span>
 <span class="n">month_df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s">"data/results.xlsx"</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Lastly, output the merged dataframe to an excel file.</p>
 
@@ -283,7 +278,7 @@ What we get is a set of nice, neat, dataframes of the sums of returns and orders
 <p>OK, in the next post we’ll get to how we can create reactive data visualizations for the dataframes we have just worked with to end up with
 something similar to what you see below!</p>
 
-<p><img src="http://localhost:4000/public/dash/dash_animation.gif" alt="my gif" class="center-image" /></p>
+<p><img src="http://stubs.github.io/public/dash/dash_animation.gif" alt="my gif" class="center-image" /></p>
 
 <h3 id="related-links">Related Links:</h3>
 <ul>
@@ -296,6 +291,15 @@ something similar to what you see below!</p>
 <!--<div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="//2018/05/24/aws-s3-cp/">
+            Read Files on AWS S3 Without Copying As A Local File
+            <small>24 May 2018</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>

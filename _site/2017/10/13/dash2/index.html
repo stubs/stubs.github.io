@@ -89,13 +89,17 @@
         
         
         
+        
+            
+        
+        
         <!--<a class="sidebar-nav-item" href="/about.html">About</a>-->
         <a class="sidebar-nav-item" href="https://github.com/stubs">GitHub</a>
         <span class="sidebar-nav-item">Currently v1.0.0</span>
     </nav>
 
     <div class="sidebar-item">
-        <p>&copy; 2017. All rights reserved.</p>
+        <p>&copy; 2018. All rights reserved.</p>
     </div>
 </div>
 
@@ -138,26 +142,24 @@ an afternoon.</p>
 <p>In order to follow along, you will need to make sure you have imported the following modules into
 python file.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
 <span class="kn">import</span> <span class="nn">dash</span>
-<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="kn">as</span> <span class="nn">dcc</span>
-<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="kn">as</span> <span class="nn">html</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="kn">as</span> <span class="nn">go</span>
+<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="n">dcc</span>
+<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="n">html</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="n">go</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>First, I create an instance of a Dash object.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">()</span>
-</code></pre>
-</div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">()</span>
+</code></pre></div></div>
 
 <p>Next, I begin to build the <code class="highlighter-rouge">layout</code> of my application. The layout of a Dash app
 describes what the app is going to look like.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
     <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
     <span class="n">dcc</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span>
         <span class="nb">id</span> <span class="o">=</span> <span class="s">"month-slider"</span><span class="p">,</span>
@@ -180,8 +182,7 @@ describes what the app is going to look like.</p>
     <span class="p">]),</span>
 <span class="p">],</span>
 <span class="n">className</span> <span class="o">=</span> <span class="s">"container"</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>There is a lot to unpack here…much more than I am going to go into in this post, but to summarize,
 the <code class="highlighter-rouge">dash_html_components</code> library provides numerous classes for many of the well-known HTML tags
@@ -190,12 +191,12 @@ and keyword arguments.</p>
 <p>To give a quick visual example, the python code above produces the following HTML tags
 (the tags have been collapsed to make the HTML model the python code as much as possible).</p>
 
-<p><img src="http://localhost:4000/public/dash/dash2html.png" alt="Dash to HTML" class="center-image" /></p>
+<p><img src="http://stubs.github.io/public/dash/dash2html.png" alt="Dash to HTML" class="center-image" /></p>
 
 <p>Once I have established the general HTML structure of the page, I begin to build the
 code that is going to be driving the interactivity of our application.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="nd">@app.callback</span><span class="p">(</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@app.callback</span><span class="p">(</span>
     <span class="n">dash</span><span class="o">.</span><span class="n">dependencies</span><span class="o">.</span><span class="n">Output</span><span class="p">(</span><span class="s">"data-graph"</span><span class="p">,</span> <span class="s">"figure"</span><span class="p">),</span>
     <span class="p">[</span><span class="n">dash</span><span class="o">.</span><span class="n">dependencies</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="s">"month-slider"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">)])</span>
 <span class="k">def</span> <span class="nf">update_df_graph</span><span class="p">(</span><span class="n">in_month</span><span class="p">):</span>
@@ -241,14 +242,13 @@ code that is going to be driving the interactivity of our application.</p>
             <span class="n">hovermode</span> <span class="o">=</span> <span class="s">"closest"</span>
         <span class="p">)</span>
     <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Let’s break this excerpt down! The decorator will be ignored for now, and we’ll start with the
 update_df_graph function definition. As detailed in the first part of this series, our <code class="highlighter-rouge">data_df</code>
 dataframe currently has the following columns:</p>
 
-<p><img src="http://localhost:4000/public/dash/dataframe2.png" alt="dataframe2" class="center-image" /></p>
+<p><img src="http://stubs.github.io/public/dash/dataframe2.png" alt="dataframe2" class="center-image" /></p>
 
 <p>The function will take an integer value representing a Month. This month integer will be used
 to filter the dataframe by the given month, and create two dataframes that sum returns and orders
@@ -281,9 +281,8 @@ something like <code class="highlighter-rouge">html.Div(id='data-graph')</code> 
 overwritten when the app starts. In this application the initial output in the “data-graph” component
 was explicitly defined in the our <code class="highlighter-rouge">layout</code> code.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">value</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="nb">min</span><span class="p">()</span>
-</code></pre>
-</div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">value</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="nb">min</span><span class="p">()</span>
+</code></pre></div></div>
 
 <p><a href="https://en.wikipedia.org/wiki/Reactive_programming"><strong>Reactive Programming</strong></a>!
 Pretty neat stuff.</p>
@@ -300,6 +299,15 @@ Pretty neat stuff.</p>
 <!--<div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="//2018/05/24/aws-s3-cp/">
+            Read Files on AWS S3 Without Copying As A Local File
+            <small>24 May 2018</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>

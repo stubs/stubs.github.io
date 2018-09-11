@@ -11,7 +11,7 @@
 
   <title>
     
-      Playing around with P5.js &middot; Aaron D. Gonzalez
+      Read Files on AWS S3 Without Copying As A Local File &middot; Aaron D. Gonzalez
     
   </title>
   
@@ -118,30 +118,34 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Playing around with P5.js</h1>
-  <p>I recently traveled out west to see an old buddy of mine.  L.A. always seems to open my eyes up to new things.  While there this time, I was introduced to Processing and P5.js.  This might need a little bit of back story, but let me preface everything that follows by stating that I am a pretty boring dude.  I like numbers and textbooks, but seeing what kind of visual stuff was easily possible left a lasting impression on me.</p>
+  <h1 class="post-title">Read Files on AWS S3 Without Copying As A Local File</h1>
+  <p>Lots of people use Amazon’s S3 buckets. I tend to use them to save some random csv
+data to look play around with later.  Every once and a while I’d come across a different key path in one of my S3 buckets
+and just be completely puzzled as to what kind of stuff I had placed in there.  Selecting a file and taking
+a look isn’t terribly hard.  Essentially, I would <code class="highlighter-rouge">aws s3 cp</code> the file from the s3 bucket to my local machine.
+From there, one can use any variety of Unix tools to get a better idea of the data contained in said file.
+See…pretty simple, but it got annoying having to eventually remove the copied local file after I would
+look through it and see that its contents were not what I was looking for.</p>
 
-<p>I (after watching a few youtube videos by Dan Shiffman working in <a href="https://processing.org">Processing</a>) was able to create the following purple rain example using the P5.js library.  Initially, I was not really looking forward to working with Javascript, but having something THIS visual helped to get me excited about the entire process. Well…that, and some of the interactive stuff others were doing incorporating other peripherals like the Kinect.</p>
+<p>For a while I simply cursed the heavens for the lack of AWS S3 commands that would perform similarly to the way
+<code class="highlighter-rouge">cat</code> does.  These were truly <em>hard times</em>. Fortunately, I was pleasantly surprised that this behavior could still
+be recreated without having to actually create a local version of the s3 file to your file system.</p>
 
-<p>Definitely a welcome change from staring at SQL databases all day.</p>
+<p><code class="highlighter-rouge">aws s3 cp &lt;S3Uri&gt; -</code> will allow you to skip copying the file to your local machine prior to checking inside with
+<code class="highlighter-rouge">head</code>, <code class="highlighter-rouge">tail</code>, <code class="highlighter-rouge">cat</code>, etc.</p>
 
-</div>
-<div align="center">
-    <iframe src="/js/p_rain/index.html" frameborder="1" scrolling="no" style="width:100%; height:70vh"></iframe>
-    <!--<iframe src="/js/p_rain/index.html" width="600px" height="400px"></iframe>-->
+<p>Let’s see it in action by peeking into some <a href="https://registry.opendata.aws/amazon-reviews/">Amazon customer review data</a>
+that is stored in a public S3 bucket.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws s3 <span class="nb">cp </span>s3://amazon-reviews-pds/tsv/amazon_reviews_us_Software_v1_00.tsv.gz - | <span class="nb">gunzip</span> <span class="nt">-c</span> | <span class="nb">head</span>
+</code></pre></div></div>
+
+<p><img src="http://stubs.github.io/public/unpack_arg_lists/photo3.png" alt="code3" class="center-image" /></p>
+
 </div>
 <!--<div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
-    
-      <li>
-        <h3>
-          <a href="//2018/05/24/aws-s3-cp/">
-            Read Files on AWS S3 Without Copying As A Local File
-            <small>24 May 2018</small>
-          </a>
-        </h3>
-      </li>
     
       <li>
         <h3>
@@ -175,6 +179,15 @@
           <a href="//2017/04/10/Virtualenv/">
             Virtualenv with Python
             <small>10 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2016/04/30/Playing-around-with-p5/">
+            Playing around with P5.js
+            <small>30 Apr 2016</small>
           </a>
         </h3>
       </li>

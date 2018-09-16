@@ -4,7 +4,7 @@
  <title>Aaron D. Gonzalez</title>
  <link href="http://stubs.github.io/atom.xml" rel="self"/>
  <link href="http://stubs.github.io/"/>
- <updated>2018-09-10T22:14:09-04:00</updated>
+ <updated>2018-09-16T18:05:49-04:00</updated>
  <id>http://stubs.github.io</id>
  <author>
    <name>Aaron D. Gonzalez</name>
@@ -33,12 +33,13 @@ be recreated without having to actually create a local version of the s3 file to
 &lt;code class=&quot;highlighter-rouge&quot;&gt;head&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;tail&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt;, etc.&lt;/p&gt;
 
 &lt;p&gt;Let’s see it in action by peeking into some &lt;a href=&quot;https://registry.opendata.aws/amazon-reviews/&quot;&gt;Amazon customer review data&lt;/a&gt;
-that is stored in a public S3 bucket.&lt;/p&gt;
+that is stored in a public S3 bucket. The code snippet below allows me to unzip the compressed tab separated value file
+and print out only the first row of the file.&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;aws s3 &lt;span class=&quot;nb&quot;&gt;cp &lt;/span&gt;s3://amazon-reviews-pds/tsv/amazon_reviews_us_Software_v1_00.tsv.gz - | &lt;span class=&quot;nb&quot;&gt;gunzip&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;head&lt;/span&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;aws s3 &lt;span class=&quot;nb&quot;&gt;cp &lt;/span&gt;s3://amazon-reviews-pds/tsv/amazon_reviews_us_Software_v1_00.tsv.gz - | &lt;span class=&quot;nb&quot;&gt;gunzip&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n1&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/unpack_arg_lists/photo3.png&quot; alt=&quot;code3&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://stubs.github.io/public/aws_cp/aws_cp_1.png&quot; alt=&quot;code3&quot; class=&quot;center-image&quot; /&gt;&lt;/p&gt;
 </content>
  </entry>
  

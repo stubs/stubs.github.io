@@ -135,12 +135,13 @@ be recreated without having to actually create a local version of the s3 file to
 <code class="highlighter-rouge">head</code>, <code class="highlighter-rouge">tail</code>, <code class="highlighter-rouge">cat</code>, etc.</p>
 
 <p>Let’s see it in action by peeking into some <a href="https://registry.opendata.aws/amazon-reviews/">Amazon customer review data</a>
-that is stored in a public S3 bucket.</p>
+that is stored in a public S3 bucket. The code snippet below allows me to unzip the compressed tab separated value file
+and print out only the first row of the file.</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws s3 <span class="nb">cp </span>s3://amazon-reviews-pds/tsv/amazon_reviews_us_Software_v1_00.tsv.gz - | <span class="nb">gunzip</span> <span class="nt">-c</span> | <span class="nb">head</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws s3 <span class="nb">cp </span>s3://amazon-reviews-pds/tsv/amazon_reviews_us_Software_v1_00.tsv.gz - | <span class="nb">gunzip</span> <span class="nt">-c</span> | <span class="nb">head</span> <span class="nt">-n1</span>
 </code></pre></div></div>
 
-<p><img src="http://stubs.github.io/public/unpack_arg_lists/photo3.png" alt="code3" class="center-image" /></p>
+<p><img src="http://stubs.github.io/public/aws_cp/aws_cp_1.png" alt="code3" class="center-image" /></p>
 
 </div>
 <!--<div class="related">

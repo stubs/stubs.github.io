@@ -1,0 +1,165 @@
+I"�&<p>I don’t often come across a lot of opportunities to use xargs.  Occasionally I will <code class="language-plaintext highlighter-rouge">grep</code> a directory
+of files and maybe use <code class="language-plaintext highlighter-rouge">xargs</code> to <code class="language-plaintext highlighter-rouge">mv</code> all the files with pattern matches, but that is usually all I tend
+to really need it for. Because of this, I often get a little giddy (nerdy…but whatever) when I find some
+real world scenarios for me to use it more!</p>
+
+<p>This week I was working on a feature branch that required almost identical copies of some directories and their
+respective files within…..just with a minor name change and similar changes to some of the json values in each file.</p>
+
+<p>At the start the directory contained the following sub-directories:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-1</span>
+json_a_access_log_table/
+json_b_access_log_table/
+json_c_access_log_table/
+json_e_access_log_table/
+json_f_access_log_table/
+json_g_access_log_table/
+json_i_access_log_table/
+json_j_access_log_table/
+json_k_access_log_table/
+json_m_access_log_table/
+json_n_access_log_table/
+json_q_access_log_table/
+json_r_access_log_table/
+json_u_access_log_table/
+json_v_access_log_table/
+json_y_access_log_table/
+json_z_access_log_table/
+native_a_access_log_table/
+native_b_access_log_table/
+native_c_access_log_table/
+native_e_access_log_table/
+native_f_access_log_table/
+native_g_access_log_table/
+native_i_access_log_table/
+native_j_access_log_table/
+native_k_access_log_table/
+native_m_access_log_table/
+native_n_access_log_table/
+native_q_access_log_table/
+native_r_access_log_table/
+native_u_access_log_table/
+native_v_access_log_table/
+native_y_access_log_table/
+native_z_access_log_table/
+</code></pre></div></div>
+
+<p>I needed to make a <code class="language-plaintext highlighter-rouge">*_error_log_table/</code> directory for every one of the existing sub-directories that started with <code class="language-plaintext highlighter-rouge">json_*</code>.
+I approached the problem in steps. The use of unix redirection with pipes (<code class="language-plaintext highlighter-rouge">|</code>) lends itself to this type of thinking.</p>
+
+<p>1) Filtering out non-<code class="language-plaintext highlighter-rouge">json</code> directories.
+First ls the directory contents =&gt; match directory names that contain <code class="language-plaintext highlighter-rouge">json</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ls | grep -e json.*</code></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> | <span class="nb">grep</span> <span class="nt">-e</span> json.<span class="k">*</span>
+json_a_access_log_table/
+json_b_access_log_table/
+json_c_access_log_table/
+json_d_access_log_table/
+json_e_access_log_table/
+json_f_access_log_table/
+json_g_access_log_table/
+json_h_access_log_table/
+json_i_access_log_table/
+json_j_access_log_table/
+json_k_access_log_table/
+</code></pre></div></div>
+
+<p>2) Replace “access” w/ “error”.
+We can simply pipe the <code class="language-plaintext highlighter-rouge">grep</code> stdout to <code class="language-plaintext highlighter-rouge">sed</code> to do the substitution.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ls | grep -e json.* | sed 's/access/error/g'</code></p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> | <span class="nb">grep</span> <span class="nt">-e</span> json.<span class="k">*</span> | <span class="nb">sed</span> <span class="s1">'s/access/error/g'</span>
+json_a_error_log_table/
+json_b_error_log_table/
+json_c_error_log_table/
+json_d_error_log_table/
+json_e_error_log_table/
+json_f_error_log_table/
+json_g_error_log_table/
+json_h_error_log_table/
+json_i_error_log_table/
+json_j_error_log_table/
+json_k_error_log_table/
+</code></pre></div></div>
+
+<p>3) Pass the sed command’s output to xargs to feed it to the <code class="language-plaintext highlighter-rouge">mkdir</code> command.
+<em>Finally</em> we get to use XARGS! I’ll show you the complete command, and we can do a quick dive
+into the xargs man page for additional info on the options used.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ls | grep -e json.* | sed 's/access/error/g' | xargs -n1 mkdir</code></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-1</span>
+json_a_access_log_table/
+json_a_error_log_table/
+json_b_access_log_table/
+json_b_error_log_table/
+json_c_access_log_table/
+json_c_error_log_table/
+json_d_access_log_table/
+json_d_error_log_table/
+json_e_access_log_table/
+json_e_error_log_table/
+json_f_access_log_table/
+json_f_error_log_table/
+json_g_access_log_table/
+json_g_error_log_table/
+json_h_access_log_table/
+json_h_error_log_table/
+json_i_access_log_table/
+json_i_error_log_table/
+json_j_access_log_table/
+json_j_error_log_table/
+json_k_access_log_table/
+json_k_error_log_table/
+native_a_access_log_table/
+native_b_access_log_table/
+native_c_access_log_table/
+native_e_access_log_table/
+native_f_access_log_table/
+native_g_access_log_table/
+native_i_access_log_table/
+native_j_access_log_table/
+native_k_access_log_table/
+native_m_access_log_table/
+native_n_access_log_table/
+native_q_access_log_table/
+native_r_access_log_table/
+native_u_access_log_table/
+native_v_access_log_table/
+native_y_access_log_table/
+native_z_access_log_table/
+</code></pre></div></div>
+
+<p>The xargs man page outlines the anatomy of the command as such:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SYNOPSIS
+     xargs <span class="o">[</span><span class="nt">-0oprt</span><span class="o">]</span> <span class="o">[</span><span class="nt">-E</span> eofstr] <span class="o">[</span><span class="nt">-I</span> replstr <span class="o">[</span><span class="nt">-R</span> replacements] <span class="o">[</span><span class="nt">-S</span> replsize]] <span class="o">[</span><span class="nt">-J</span> replstr] <span class="o">[</span><span class="nt">-L</span> number] <span class="o">[</span><span class="nt">-n</span> number <span class="o">[</span><span class="nt">-x</span><span class="o">]]</span> <span class="o">[</span><span class="nt">-P</span> maxprocs] <span class="o">[</span><span class="nt">-s</span> size] <span class="o">[</span>utility <span class="o">[</span>argument ...]]
+</code></pre></div></div>
+
+<p>My use of the command employed the <code class="language-plaintext highlighter-rouge">-n</code> option.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-n</span> number
+             Set the maximum number of arguments taken from standard input <span class="k">for </span>each invocation of utility.  An invocation of utility will use less than number standard input arguments
+             <span class="k">if </span>the number of bytes accumulated <span class="o">(</span>see the <span class="nt">-s</span> option<span class="o">)</span> exceeds the specified size or there are fewer than number arguments remaining <span class="k">for </span>the last invocation of utility.
+             The current default value <span class="k">for </span>number is 5000.
+</code></pre></div></div>
+
+<p>With my use of <code class="language-plaintext highlighter-rouge">xargs</code> I am taking <code class="language-plaintext highlighter-rouge">sed</code>’s stdout and for each 1 of them (<code class="language-plaintext highlighter-rouge">-n1</code>) call <code class="language-plaintext highlighter-rouge">mkdir</code>. If you would like
+to debug and confirm that xargs is indeed going to run the command you expect it to, you can always use the <code class="language-plaintext highlighter-rouge">-p</code>
+option. It will prompt the user for “y” or “n” confirmation before executing the command it was going to run. Think of it as a
+dryrun.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-p</span>      Echo each <span class="nb">command </span>to be executed and ask the user whether it should be executed.  An affirmative response, ‘y’ <span class="k">in </span>the POSIX locale, causes the <span class="nb">command </span>to be executed, any
+             other response causes it to be skipped.  No commands are executed <span class="k">if </span>the process is not attached to a terminal.
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> | <span class="nb">grep</span> <span class="nt">-e</span> json.<span class="k">*</span> | <span class="nb">sed</span> <span class="s1">'s/access/error/g'</span> | xargs <span class="nt">-n1</span> <span class="nt">-p</span> <span class="nb">mkdir
+mkdir </span>json_a_error_log_table/?...y
+</code></pre></div></div>
+
+<p>Great. All the necessary new directories have been created! Next week I’ll cover actually copying the actual copying of the <code class="language-plaintext highlighter-rouge">table_def.json</code> files from the original <em>access</em> dir to the new
+<em>error</em> counterpart, and the following minor edits needed in these files.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ls -1 json_*_access_logs/table_def.json | xargs -I {} cp {} json_*_error_logs/table_def.json</code></p>
+:ET

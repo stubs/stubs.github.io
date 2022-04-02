@@ -99,7 +99,7 @@
     </nav>
 
     <div class="sidebar-item">
-        <p>&copy; 2018. All rights reserved.</p>
+        <p>&copy; 2022. All rights reserved.</p>
     </div>
 </div>
 
@@ -121,6 +121,187 @@
   
   <div class="post">
     <h1 class="post-title">
+      <!--<a href="//2022/04/02/xargs/">-->
+      <a href="/2022/04/02/xargs/">
+        Unix tools - xargs
+      </a>
+    </h1>
+
+    <!--<span class="post-date">02 Apr 2022</span> -->
+
+    <p>
+        <a href="/2022/04/02/xargs/"><img class="centered" src="https://stubs.github.io/public/xargs/" alt=""></a>
+    </p>
+
+     <p> eXtended ARGumentS 🤔 </p>
+     <p> <a class = "graybutton" href="/2022/04/02/xargs/">Continue reading</a></p>
+     <!--<p>I don’t often come across a lot of opportunities to use xargs.  Occasionally I will <code class="language-plaintext highlighter-rouge">grep</code> a directory
+of files and maybe use <code class="language-plaintext highlighter-rouge">xargs</code> to <code class="language-plaintext highlighter-rouge">mv</code> all the files with pattern matches, but that is usually all I tend
+to really need it for. Because of this, I often get a little giddy (nerdy…but whatever) when I find some
+other real world scenarios for me to use it more!</p>
+
+<p>This week I was working on a feature branch that required almost identical copies of some directories and their
+respective files within…..just with a minor name change and similar changes to some of the json values in each file.</p>
+
+<p>At the start the directory contained the following sub-directories:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-1</span>
+json_a_access_log_table/
+json_b_access_log_table/
+json_c_access_log_table/
+json_e_access_log_table/
+json_f_access_log_table/
+json_g_access_log_table/
+json_i_access_log_table/
+json_j_access_log_table/
+json_k_access_log_table/
+json_m_access_log_table/
+json_n_access_log_table/
+json_q_access_log_table/
+json_r_access_log_table/
+json_u_access_log_table/
+json_v_access_log_table/
+json_y_access_log_table/
+json_z_access_log_table/
+native_a_access_log_table/
+native_b_access_log_table/
+native_c_access_log_table/
+native_e_access_log_table/
+native_f_access_log_table/
+native_g_access_log_table/
+native_i_access_log_table/
+native_j_access_log_table/
+native_k_access_log_table/
+native_m_access_log_table/
+native_n_access_log_table/
+native_q_access_log_table/
+native_r_access_log_table/
+native_u_access_log_table/
+native_v_access_log_table/
+native_y_access_log_table/
+native_z_access_log_table/
+</code></pre></div></div>
+
+<p>I needed to make a <code class="language-plaintext highlighter-rouge">*_error_log_table/</code> directory for every one of the existing sub-directories that started with <code class="language-plaintext highlighter-rouge">json_*</code>.
+I approached the problem in steps. The use of unix redirection with pipes (<code class="language-plaintext highlighter-rouge">|</code>) lends itself to this type of thinking.</p>
+
+<p>1) Filtering out non-<code class="language-plaintext highlighter-rouge">json</code> directories.
+First ls the directory contents =&gt; match directory names that contain <code class="language-plaintext highlighter-rouge">json</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ls | grep -e json.*</code></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> | <span class="nb">grep</span> <span class="nt">-e</span> json.<span class="k">*</span>
+json_a_access_log_table/
+json_b_access_log_table/
+json_c_access_log_table/
+json_d_access_log_table/
+json_e_access_log_table/
+json_f_access_log_table/
+json_g_access_log_table/
+json_h_access_log_table/
+json_i_access_log_table/
+json_j_access_log_table/
+json_k_access_log_table/
+</code></pre></div></div>
+
+<p>2) Replace “access” w/ “error”.
+We can simply pipe the <code class="language-plaintext highlighter-rouge">grep</code> stdout to <code class="language-plaintext highlighter-rouge">sed</code> to do the substitution.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ls | grep -e json.* | sed 's/access/error/g'</code></p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> | <span class="nb">grep</span> <span class="nt">-e</span> json.<span class="k">*</span> | <span class="nb">sed</span> <span class="s1">'s/access/error/g'</span>
+json_a_error_log_table/
+json_b_error_log_table/
+json_c_error_log_table/
+json_d_error_log_table/
+json_e_error_log_table/
+json_f_error_log_table/
+json_g_error_log_table/
+json_h_error_log_table/
+json_i_error_log_table/
+json_j_error_log_table/
+json_k_error_log_table/
+</code></pre></div></div>
+
+<p>3) Pass the sed command’s output to xargs to feed it to the <code class="language-plaintext highlighter-rouge">mkdir</code> command.
+<em>Finally</em> we get to use XARGS! I’ll show you the complete command, and we can do a quick dive
+into the xargs man page for additional info on the options used.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ls | grep -e json.* | sed 's/access/error/g' | xargs -n1 mkdir</code></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-1</span>
+json_a_access_log_table/
+json_a_error_log_table/
+json_b_access_log_table/
+json_b_error_log_table/
+json_c_access_log_table/
+json_c_error_log_table/
+json_d_access_log_table/
+json_d_error_log_table/
+json_e_access_log_table/
+json_e_error_log_table/
+json_f_access_log_table/
+json_f_error_log_table/
+json_g_access_log_table/
+json_g_error_log_table/
+json_h_access_log_table/
+json_h_error_log_table/
+json_i_access_log_table/
+json_i_error_log_table/
+json_j_access_log_table/
+json_j_error_log_table/
+json_k_access_log_table/
+json_k_error_log_table/
+native_a_access_log_table/
+native_b_access_log_table/
+native_c_access_log_table/
+native_e_access_log_table/
+native_f_access_log_table/
+native_g_access_log_table/
+native_i_access_log_table/
+native_j_access_log_table/
+native_k_access_log_table/
+native_m_access_log_table/
+native_n_access_log_table/
+native_q_access_log_table/
+native_r_access_log_table/
+native_u_access_log_table/
+native_v_access_log_table/
+native_y_access_log_table/
+native_z_access_log_table/
+</code></pre></div></div>
+
+<p>The xargs man page outlines the anatomy of the command as such:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SYNOPSIS
+     xargs <span class="o">[</span><span class="nt">-0oprt</span><span class="o">]</span> <span class="o">[</span><span class="nt">-E</span> eofstr] <span class="o">[</span><span class="nt">-I</span> replstr <span class="o">[</span><span class="nt">-R</span> replacements] <span class="o">[</span><span class="nt">-S</span> replsize]] <span class="o">[</span><span class="nt">-J</span> replstr] <span class="o">[</span><span class="nt">-L</span> number] <span class="o">[</span><span class="nt">-n</span> number <span class="o">[</span><span class="nt">-x</span><span class="o">]]</span> <span class="o">[</span><span class="nt">-P</span> maxprocs] <span class="o">[</span><span class="nt">-s</span> size] <span class="o">[</span>utility <span class="o">[</span>argument ...]]
+</code></pre></div></div>
+
+<p>My use of the command employed the <code class="language-plaintext highlighter-rouge">-n</code> option.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-n</span> number
+             Set the maximum number of arguments taken from standard input <span class="k">for </span>each invocation of utility.  An invocation of utility will use less than number standard input arguments
+             <span class="k">if </span>the number of bytes accumulated <span class="o">(</span>see the <span class="nt">-s</span> option<span class="o">)</span> exceeds the specified size or there are fewer than number arguments remaining <span class="k">for </span>the last invocation of utility.
+             The current default value <span class="k">for </span>number is 5000.
+</code></pre></div></div>
+
+<p>With my use of <code class="language-plaintext highlighter-rouge">xargs</code> I am taking <code class="language-plaintext highlighter-rouge">sed</code>’s stdout and for each 1 of them (<code class="language-plaintext highlighter-rouge">-n1</code>) call <code class="language-plaintext highlighter-rouge">mkdir</code>. If you would like
+to debug and confirm that xargs is indeed going to run the command you expect it to, you can always use the <code class="language-plaintext highlighter-rouge">-p</code>
+option. It will prompt the user for “y” or “n” confirmation before executing the command it was going to run. Think of it as a
+dryrun.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-p</span>      Echo each <span class="nb">command </span>to be executed and ask the user whether it should be executed.  An affirmative response, ‘y’ <span class="k">in </span>the POSIX locale, causes the <span class="nb">command </span>to be executed, any
+             other response causes it to be skipped.  No commands are executed <span class="k">if </span>the process is not attached to a terminal.
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> | <span class="nb">grep</span> <span class="nt">-e</span> json.<span class="k">*</span> | <span class="nb">sed</span> <span class="s1">'s/access/error/g'</span> | xargs <span class="nt">-n1</span> <span class="nt">-p</span> <span class="nb">mkdir
+mkdir </span>json_a_error_log_table/?...y
+</code></pre></div></div>
+
+<p>Great. All the necessary new directories have been created! Next week I’ll cover actually copying the actual copying of the <code class="language-plaintext highlighter-rouge">table_def.json</code> files from the original <em>access</em> dir to the new
+<em>error</em> counterpart, and the following minor edits needed in these files leveraging good ole vim.</p>
+-->
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <!--<a href="//2018/05/24/aws-s3-cp/">-->
       <a href="/2018/05/24/aws-s3-cp/">
         Read Files on AWS S3 Without Copying As A Local File
@@ -138,17 +319,17 @@
      <!--<p>Lots of people use Amazon’s S3 buckets. I tend to use them to save some random csv
 data to look play around with later.  Every once and a while I’d come across a different key path in one of my S3 buckets
 and just be completely puzzled as to what kind of stuff I had placed in there.  Selecting a file and taking
-a look isn’t terribly hard.  Essentially, I would <code class="highlighter-rouge">aws s3 cp</code> the file from the s3 bucket to my local machine.
+a look isn’t terribly hard.  Essentially, I would <code class="language-plaintext highlighter-rouge">aws s3 cp</code> the file from the s3 bucket to my local machine.
 From there, one can use any variety of Unix tools to get a better idea of the data contained in said file.
 See…pretty simple, but it got annoying having to eventually remove the copied local file after I would
 look through it and see that its contents were not what I was looking for.</p>
 
 <p>For a while I simply cursed the heavens for the lack of AWS S3 commands that would perform similarly to the way
-<code class="highlighter-rouge">cat</code> does.  These were truly <em>hard times</em>. Fortunately, I was pleasantly surprised that this behavior could still
+<code class="language-plaintext highlighter-rouge">cat</code> does.  These were truly <em>hard times</em>. Fortunately, I was pleasantly surprised that this behavior could still
 be recreated without having to actually create a local version of the s3 file to your file system.</p>
 
-<p><code class="highlighter-rouge">aws s3 cp &lt;S3Uri&gt; -</code> will allow you to skip copying the file to your local machine prior to checking inside with
-<code class="highlighter-rouge">head</code>, <code class="highlighter-rouge">tail</code>, <code class="highlighter-rouge">cat</code>, etc.</p>
+<p><code class="language-plaintext highlighter-rouge">aws s3 cp &lt;S3Uri&gt; -</code> will allow you to skip copying the file to your local machine prior to checking inside with
+<code class="language-plaintext highlighter-rouge">head</code>, <code class="language-plaintext highlighter-rouge">tail</code>, <code class="language-plaintext highlighter-rouge">cat</code>, etc.</p>
 
 <p>Let’s see it in action by peeking into some <a href="https://registry.opendata.aws/amazon-reviews/">Amazon customer review data</a>
 that is stored in a public S3 bucket. The code snippet below allows me to unzip the compressed tab separated value file
@@ -157,7 +338,7 @@ and print out only the first row of the file.</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws s3 <span class="nb">cp </span>s3://amazon-reviews-pds/tsv/amazon_reviews_us_Software_v1_00.tsv.gz - | <span class="nb">gunzip</span> <span class="nt">-c</span> | <span class="nb">head</span> <span class="nt">-n1</span>
 </code></pre></div></div>
 
-<p><img src="http://stubs.github.io/public/aws_cp/aws_cp_1.png" alt="code3" class="center-image" /></p>
+<p><img src="http://localhost:4000/public/aws_cp/aws_cp_1.png" alt="code3" class="center-image" /></p>
 -->
   </div>
   
@@ -200,8 +381,8 @@ an afternoon.</p>
 <p>In order to follow along, you will need to make sure you have imported the following modules into
 python file.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-<span class="kn">import</span> <span class="nn">dash</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span><span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="n">dcc</span>
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="n">html</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
@@ -211,30 +392,30 @@ python file.</p>
 
 <p>First, I create an instance of a Dash object.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">Dash</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p>Next, I begin to build the <code class="highlighter-rouge">layout</code> of my application. The layout of a Dash app
+<p>Next, I begin to build the <code class="language-plaintext highlighter-rouge">layout</code> of my application. The layout of a Dash app
 describes what the app is going to look like.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
-    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
-    <span class="n">dcc</span><span class="o">.</span><span class="n">Slider</span><span class="p">(</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span><span class="p">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="p">.</span><span class="n">Div</span><span class="p">([</span>
+    <span class="n">html</span><span class="p">.</span><span class="n">Br</span><span class="p">(),</span>
+    <span class="n">dcc</span><span class="p">.</span><span class="n">Slider</span><span class="p">(</span>
         <span class="nb">id</span> <span class="o">=</span> <span class="s">"month-slider"</span><span class="p">,</span>
-        <span class="nb">min</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="nb">min</span><span class="p">(),</span>
-        <span class="nb">max</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="nb">max</span><span class="p">(),</span>
-        <span class="n">marks</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="n">months</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">unique</span><span class="p">()},</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="nb">min</span><span class="p">(),</span>
+        <span class="nb">min</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">.</span><span class="n">dateordered</span><span class="p">.</span><span class="n">dt</span><span class="p">.</span><span class="n">month</span><span class="p">.</span><span class="nb">min</span><span class="p">(),</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">.</span><span class="n">dateordered</span><span class="p">.</span><span class="n">dt</span><span class="p">.</span><span class="n">month</span><span class="p">.</span><span class="nb">max</span><span class="p">(),</span>
+        <span class="n">marks</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="n">months</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_df</span><span class="p">.</span><span class="n">dateordered</span><span class="p">.</span><span class="n">dt</span><span class="p">.</span><span class="n">month</span><span class="p">.</span><span class="n">unique</span><span class="p">()},</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">.</span><span class="n">dateordered</span><span class="p">.</span><span class="n">dt</span><span class="p">.</span><span class="n">month</span><span class="p">.</span><span class="nb">min</span><span class="p">(),</span>
         <span class="n">step</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="p">),</span>
-    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
-    <span class="n">html</span><span class="o">.</span><span class="n">H1</span><span class="p">([</span><span class="s">"Sales &amp; Returns 2016"</span><span class="p">],</span>
+    <span class="n">html</span><span class="p">.</span><span class="n">Br</span><span class="p">(),</span>
+    <span class="n">html</span><span class="p">.</span><span class="n">H1</span><span class="p">([</span><span class="s">"Sales &amp; Returns 2016"</span><span class="p">],</span>
         <span class="n">style</span> <span class="o">=</span> <span class="p">{</span><span class="s">"textAlign"</span><span class="p">:</span> <span class="s">"center"</span><span class="p">}),</span>
-    <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span>
+    <span class="n">dcc</span><span class="p">.</span><span class="n">Graph</span><span class="p">(</span>
         <span class="nb">id</span> <span class="o">=</span> <span class="s">"data-graph"</span><span class="p">,</span>
         <span class="n">animate</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
-    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
-        <span class="n">html</span><span class="o">.</span><span class="n">H3</span><span class="p">([</span><span class="s">"Monthly Totals"</span><span class="p">],</span>
+    <span class="n">html</span><span class="p">.</span><span class="n">Div</span><span class="p">([</span>
+        <span class="n">html</span><span class="p">.</span><span class="n">H3</span><span class="p">([</span><span class="s">"Monthly Totals"</span><span class="p">],</span>
             <span class="n">style</span> <span class="o">=</span> <span class="p">{</span><span class="s">"textAlign"</span><span class="p">:</span> <span class="s">"center"</span><span class="p">}),</span>
         <span class="n">pandas_gen_html_table</span><span class="p">(</span><span class="n">month_df</span><span class="p">)</span>
     <span class="p">]),</span>
@@ -243,48 +424,48 @@ describes what the app is going to look like.</p>
 </code></pre></div></div>
 
 <p>There is a lot to unpack here…much more than I am going to go into in this post, but to summarize,
-the <code class="highlighter-rouge">dash_html_components</code> library provides numerous classes for many of the well-known HTML tags
+the <code class="language-plaintext highlighter-rouge">dash_html_components</code> library provides numerous classes for many of the well-known HTML tags
 and keyword arguments.</p>
 
 <p>To give a quick visual example, the python code above produces the following HTML tags
 (the tags have been collapsed to make the HTML model the python code as much as possible).</p>
 
-<p><img src="http://stubs.github.io/public/dash/dash2html.png" alt="Dash to HTML" class="center-image" /></p>
+<p><img src="http://localhost:4000/public/dash/dash2html.png" alt="Dash to HTML" class="center-image" /></p>
 
 <p>Once I have established the general HTML structure of the page, I begin to build the
 code that is going to be driving the interactivity of our application.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@app.callback</span><span class="p">(</span>
-    <span class="n">dash</span><span class="o">.</span><span class="n">dependencies</span><span class="o">.</span><span class="n">Output</span><span class="p">(</span><span class="s">"data-graph"</span><span class="p">,</span> <span class="s">"figure"</span><span class="p">),</span>
-    <span class="p">[</span><span class="n">dash</span><span class="o">.</span><span class="n">dependencies</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="s">"month-slider"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">)])</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">callback</span><span class="p">(</span>
+    <span class="n">dash</span><span class="p">.</span><span class="n">dependencies</span><span class="p">.</span><span class="n">Output</span><span class="p">(</span><span class="s">"data-graph"</span><span class="p">,</span> <span class="s">"figure"</span><span class="p">),</span>
+    <span class="p">[</span><span class="n">dash</span><span class="p">.</span><span class="n">dependencies</span><span class="p">.</span><span class="n">Input</span><span class="p">(</span><span class="s">"month-slider"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">)])</span>
 <span class="k">def</span> <span class="nf">update_df_graph</span><span class="p">(</span><span class="n">in_month</span><span class="p">):</span>
     <span class="n">traces</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_df</span><span class="o">.</span><span class="n">orderstatus</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-        <span class="n">df_by_status</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="n">data_df</span><span class="o">.</span><span class="n">orderstatus</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_df</span><span class="p">.</span><span class="n">orderstatus</span><span class="p">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">df_by_status</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="n">data_df</span><span class="p">.</span><span class="n">orderstatus</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="s">"returned"</span><span class="p">:</span>
-            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">df_by_status</span><span class="p">[</span><span class="n">df_by_status</span><span class="o">.</span><span class="n">datereturned</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">in_month</span><span class="p">]</span>
-            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">"datereturned"</span><span class="p">)[</span><span class="s">"returns"</span><span class="p">]</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
-            <span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-                <span class="n">y</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">returns</span><span class="p">,</span>
+            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">df_by_status</span><span class="p">[</span><span class="n">df_by_status</span><span class="p">.</span><span class="n">datereturned</span><span class="p">.</span><span class="n">dt</span><span class="p">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">in_month</span><span class="p">]</span>
+            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">"datereturned"</span><span class="p">)[</span><span class="s">"returns"</span><span class="p">].</span><span class="nb">sum</span><span class="p">().</span><span class="n">to_frame</span><span class="p">()</span>
+            <span class="n">traces</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="n">Scatter</span><span class="p">(</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="p">.</span><span class="n">index</span><span class="p">,</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="p">.</span><span class="n">returns</span><span class="p">,</span>
                 <span class="n">mode</span> <span class="o">=</span> <span class="s">"lines+markers"</span><span class="p">,</span>
-                <span class="n">opacity</span> <span class="o">=</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">opacity</span> <span class="o">=</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span>
                 <span class="n">marker</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s">"line"</span><span class="p">:</span> <span class="p">{</span><span class="s">"width"</span><span class="p">:</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="s">"color"</span><span class="p">:</span> <span class="s">"white"</span><span class="p">},</span>
+                    <span class="s">"line"</span><span class="p">:</span> <span class="p">{</span><span class="s">"width"</span><span class="p">:</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="s">"color"</span><span class="p">:</span> <span class="s">"white"</span><span class="p">},</span>
                     <span class="s">"symbol"</span><span class="p">:</span> <span class="s">"square"</span>
                 <span class="p">},</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">i</span>
             <span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">df_by_status</span><span class="p">[</span><span class="n">df_by_status</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">in_month</span><span class="p">]</span>
-            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">"dateordered"</span><span class="p">)[</span><span class="s">"orders"</span><span class="p">]</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
-            <span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-                <span class="n">y</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">orders</span><span class="p">,</span>
+            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">df_by_status</span><span class="p">[</span><span class="n">df_by_status</span><span class="p">.</span><span class="n">dateordered</span><span class="p">.</span><span class="n">dt</span><span class="p">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">in_month</span><span class="p">]</span>
+            <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">"dateordered"</span><span class="p">)[</span><span class="s">"orders"</span><span class="p">].</span><span class="nb">sum</span><span class="p">().</span><span class="n">to_frame</span><span class="p">()</span>
+            <span class="n">traces</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">go</span><span class="p">.</span><span class="n">Scatter</span><span class="p">(</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="p">.</span><span class="n">index</span><span class="p">,</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="p">.</span><span class="n">orders</span><span class="p">,</span>
                 <span class="n">mode</span> <span class="o">=</span> <span class="s">"lines+markers"</span><span class="p">,</span>
-                <span class="n">opacity</span> <span class="o">=</span> <span class="o">.</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">opacity</span> <span class="o">=</span> <span class="p">.</span><span class="mi">7</span><span class="p">,</span>
                 <span class="n">marker</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s">"line"</span><span class="p">:</span> <span class="p">{</span><span class="s">"width"</span><span class="p">:</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="s">"color"</span><span class="p">:</span> <span class="s">"white"</span><span class="p">},</span>
+                    <span class="s">"line"</span><span class="p">:</span> <span class="p">{</span><span class="s">"width"</span><span class="p">:</span> <span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="s">"color"</span><span class="p">:</span> <span class="s">"white"</span><span class="p">},</span>
                     <span class="s">"symbol"</span><span class="p">:</span> <span class="s">"201"</span>
                 <span class="p">},</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">i</span>
@@ -292,9 +473,9 @@ code that is going to be driving the interactivity of our application.</p>
 
     <span class="k">return</span> <span class="p">{</span>
         <span class="s">"data"</span> <span class="p">:</span> <span class="n">traces</span><span class="p">,</span>
-        <span class="s">"layout"</span> <span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
+        <span class="s">"layout"</span> <span class="p">:</span> <span class="n">go</span><span class="p">.</span><span class="n">Layout</span><span class="p">(</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s">"Returns &amp; Orders by Month"</span><span class="p">,</span>
-            <span class="n">xaxis</span><span class="o">=</span><span class="p">{</span><span class="s">"range"</span><span class="p">:</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)],</span> <span class="s">"type"</span><span class="p">:</span> <span class="s">"date"</span><span class="p">,</span> <span class="s">"title"</span><span class="p">:</span> <span class="s">"Date"</span><span class="p">},</span>
+            <span class="n">xaxis</span><span class="o">=</span><span class="p">{</span><span class="s">"range"</span><span class="p">:</span> <span class="p">[</span><span class="n">datetime</span><span class="p">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">datetime</span><span class="p">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)],</span> <span class="s">"type"</span><span class="p">:</span> <span class="s">"date"</span><span class="p">,</span> <span class="s">"title"</span><span class="p">:</span> <span class="s">"Date"</span><span class="p">},</span>
             <span class="n">yaxis</span> <span class="o">=</span> <span class="p">{</span><span class="s">"type"</span><span class="p">:</span> <span class="s">"Linear"</span><span class="p">,</span> <span class="s">"title"</span><span class="p">:</span> <span class="s">"# of Transactions"</span><span class="p">},</span>
             <span class="n">legend</span> <span class="o">=</span> <span class="p">{</span><span class="s">"x"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">"y"</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
             <span class="n">hovermode</span> <span class="o">=</span> <span class="s">"closest"</span>
@@ -303,43 +484,43 @@ code that is going to be driving the interactivity of our application.</p>
 </code></pre></div></div>
 
 <p>Let’s break this excerpt down! The decorator will be ignored for now, and we’ll start with the
-update_df_graph function definition. As detailed in the first part of this series, our <code class="highlighter-rouge">data_df</code>
+update_df_graph function definition. As detailed in the first part of this series, our <code class="language-plaintext highlighter-rouge">data_df</code>
 dataframe currently has the following columns:</p>
 
-<p><img src="http://stubs.github.io/public/dash/dataframe2.png" alt="dataframe2" class="center-image" /></p>
+<p><img src="http://localhost:4000/public/dash/dataframe2.png" alt="dataframe2" class="center-image" /></p>
 
 <p>The function will take an integer value representing a Month. This month integer will be used
 to filter the dataframe by the given month, and create two dataframes that sum returns and orders
 grouped by their date. Each of these resulting dataframes are then used to populate
-a Scatter plot object (a class of a Dash <code class="highlighter-rouge">graph_objs</code>) which is then appended to a list of
-Scatter plot objects <code class="highlighter-rouge">traces</code>. For each of these Scatter plot objects I chose
+a Scatter plot object (a class of a Dash <code class="language-plaintext highlighter-rouge">graph_objs</code>) which is then appended to a list of
+Scatter plot objects <code class="language-plaintext highlighter-rouge">traces</code>. For each of these Scatter plot objects I chose
 to plot the respective dates (either “dateordered” or “datereturned”) on the X axis
 , and the amount of “orders” or “returns” on the Y axis.</p>
 
-<p><code class="highlighter-rouge">mode</code>, <code class="highlighter-rouge">opacity</code>, <code class="highlighter-rouge">marker</code>, <code class="highlighter-rouge">name</code> attributes let a user define what kind of style the plot
+<p><code class="language-plaintext highlighter-rouge">mode</code>, <code class="language-plaintext highlighter-rouge">opacity</code>, <code class="language-plaintext highlighter-rouge">marker</code>, <code class="language-plaintext highlighter-rouge">name</code> attributes let a user define what kind of style the plot
 should be implemented with. For example, when plotting the returns data, I chose to use have my
 individual points connected by a line, and my actual points are to be square-shaped.</p>
 
-<p>Lastly, the function will return a dictionary that has two keys: <code class="highlighter-rouge">data</code> and <code class="highlighter-rouge">layout</code>. The <code class="highlighter-rouge">layout</code>
+<p>Lastly, the function will return a dictionary that has two keys: <code class="language-plaintext highlighter-rouge">data</code> and <code class="language-plaintext highlighter-rouge">layout</code>. The <code class="language-plaintext highlighter-rouge">layout</code>
 value will detail how the graph is going to look (e.g. which data is on the X &amp; Y axes, whether
-or not I want the graph object to be titled, etc.), and the <code class="highlighter-rouge">data</code> value will be graphed
-<strong><em>ONTO</em></strong> the graph described by the <code class="highlighter-rouge">layout</code> value.</p>
+or not I want the graph object to be titled, etc.), and the <code class="language-plaintext highlighter-rouge">data</code> value will be graphed
+<strong><em>ONTO</em></strong> the graph described by the <code class="language-plaintext highlighter-rouge">layout</code> value.</p>
 
 <p>There, now that we have the quick function walkthrough out of the way we can discuss the use of
-the <code class="highlighter-rouge">@</code> decorator immediately prior to our <code class="highlighter-rouge">update_df_graph</code>. This decorator is essentially what
+the <code class="language-plaintext highlighter-rouge">@</code> decorator immediately prior to our <code class="language-plaintext highlighter-rouge">update_df_graph</code>. This decorator is essentially what
 allows our graph to be dynamically updated based on the user’s interactions with the Slider object
-in our <code class="highlighter-rouge">app.layout</code> object. In Dash, the inputs and outputs of an application are the properties
+in our <code class="language-plaintext highlighter-rouge">app.layout</code> object. In Dash, the inputs and outputs of an application are the properties
 of a particular component. In this example, our input is the “value” property of the component
 that has the ID “month-slider”. Our output is the “figure” property of the component with the ID
 “data-graph”. You probably have noticed that I did not set a “figure” property of the
-“data-graph” component in my <code class="highlighter-rouge">layout</code>, this is because when the Dash app starts, it
+“data-graph” component in my <code class="language-plaintext highlighter-rouge">layout</code>, this is because when the Dash app starts, it
 automatically calls all of the callbacks with the initial values of the input components in
 order to populate the initial state of the output components. For example, if I had specified
-something like <code class="highlighter-rouge">html.Div(id='data-graph')</code> with a “figure” property to start, it would get
+something like <code class="language-plaintext highlighter-rouge">html.Div(id='data-graph')</code> with a “figure” property to start, it would get
 overwritten when the app starts. In this application the initial output in the “data-graph” component
-was explicitly defined in the our <code class="highlighter-rouge">layout</code> code.</p>
+was explicitly defined in the our <code class="language-plaintext highlighter-rouge">layout</code> code.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">value</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="nb">min</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">value</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">.</span><span class="n">dateordered</span><span class="p">.</span><span class="n">dt</span><span class="p">.</span><span class="n">month</span><span class="p">.</span><span class="nb">min</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p><a href="https://en.wikipedia.org/wiki/Reactive_programming"><strong>Reactive Programming</strong></a>!
@@ -374,31 +555,31 @@ Pretty neat stuff.</p>
      <!--<p>I was recently working on a python wrapper around grep.  I often find myself having to search for random patterns through tons of CSVs.  At work I have used some applications that have helped out, but inevitably I found that said applications are lacking in some way or another.  Maybe it’s that the application did not easily allow any kind of recursive searching, did not allow ways to specify certain directories to not even bother searching, or (godforbid!) it did not allow any kind of regular expression use.  I thought it’d be fun to try to whip up a little script that could meet my needs….fun &amp; practical.  The code is available on my <a href="http://www.github.com/stubs/py_grep_parse">GitHub</a> (although it may have changed some from the time of this writing).</p>
 
 <p>In a nutshell, the python script utilizes the <a href="https://docs.python.org/2/library/subprocess.html">Subprocess</a> module to call grep to look for a given regular expression.  In the example below I simply was looking for the pattern “smith” (case insensitive) in a directory appropriately named “test_data”.
-<img src="http://stubs.github.io/public/unpack_arg_lists/photo0.png" alt="code0" class="center-image" /></p>
+<img src="http://localhost:4000/public/unpack_arg_lists/photo0.png" alt="code0" class="center-image" /></p>
 
 <p>The results are below:
-<img src="http://stubs.github.io/public/unpack_arg_lists/photo1.png" alt="code1" class="center-image" /></p>
+<img src="http://localhost:4000/public/unpack_arg_lists/photo1.png" alt="code1" class="center-image" /></p>
 
-<p>“Great!”, I thought.  Now I can make a <code class="highlighter-rouge">head</code> call to gather the given file’s column headers.  Seems simple enough. In this case, my test data was all in one directory appropriately name “test_data”, so I did not think much of how to accomplish this task. We can use make a <code class="highlighter-rouge">head -1</code> call using the same Subprocess module
+<p>“Great!”, I thought.  Now I can make a <code class="language-plaintext highlighter-rouge">head</code> call to gather the given file’s column headers.  Seems simple enough. In this case, my test data was all in one directory appropriately name “test_data”, so I did not think much of how to accomplish this task. We can use make a <code class="language-plaintext highlighter-rouge">head -1</code> call using the same Subprocess module
 to collect the first row from the files we are working with (assuming that the files have column headers in the first row).</p>
 
-<p>Before I can make the <code class="highlighter-rouge">head -1</code> call, I need to first parse the path to the file from the data yielded in the first column (as shown above). Lastly, I can pass the individual variables client &amp; file_name to the <code class="highlighter-rouge">os.path.join()</code> method to get a intelligently joined path. :
-<img src="http://stubs.github.io/public/unpack_arg_lists/photo2.png" alt="code2" class="center-image" /></p>
+<p>Before I can make the <code class="language-plaintext highlighter-rouge">head -1</code> call, I need to first parse the path to the file from the data yielded in the first column (as shown above). Lastly, I can pass the individual variables client &amp; file_name to the <code class="language-plaintext highlighter-rouge">os.path.join()</code> method to get a intelligently joined path. :
+<img src="http://localhost:4000/public/unpack_arg_lists/photo2.png" alt="code2" class="center-image" /></p>
 
 <h3 id="complicating-stuff">COMPLICATING STUFF</h3>
 <p>Well what if your grep search finds hits at different depths of recursion?  For instance, what if the directory containing all the data I wished to grep looked something like this:
-<img src="http://stubs.github.io/public/unpack_arg_lists/photo3.png" alt="code3" class="center-image" /></p>
+<img src="http://localhost:4000/public/unpack_arg_lists/photo3.png" alt="code3" class="center-image" /></p>
 
-<p>Unfortunately, <code class="highlighter-rouge">os.path.join()</code> is a function call requiring separate positional arguments.  This means one cannot simply create a list of strings that are to be joined by <code class="highlighter-rouge">os.path.join()</code> to create the path to a file to pull headers for.
-<img src="http://stubs.github.io/public/unpack_arg_lists/photo4.png" alt="code4" class="center-image" /></p>
+<p>Unfortunately, <code class="language-plaintext highlighter-rouge">os.path.join()</code> is a function call requiring separate positional arguments.  This means one cannot simply create a list of strings that are to be joined by <code class="language-plaintext highlighter-rouge">os.path.join()</code> to create the path to a file to pull headers for.
+<img src="http://localhost:4000/public/unpack_arg_lists/photo4.png" alt="code4" class="center-image" /></p>
 
 <p>This puzzled me for a while, but rather than immediately try to start coding a solution I made myself take a quick break and grab a coffee.  I had a feeling I had stumbled across something similar when I was reading through every Python text book I could find (back when I was reading a lot more than actually writing).</p>
 
-<p>Sure enough I remembered reading about how to denote functions that could be called with arbitrary arguments lists using the “*” character. The same character can also unpack arguments that are already in a list or tuple to be used for a function call that needs separate arguments….like <code class="highlighter-rouge">os.path.join()</code>!
-<img src="http://stubs.github.io/public/unpack_arg_lists/photo5.png" alt="code5" class="center-image" /></p>
+<p>Sure enough I remembered reading about how to denote functions that could be called with arbitrary arguments lists using the “*” character. The same character can also unpack arguments that are already in a list or tuple to be used for a function call that needs separate arguments….like <code class="language-plaintext highlighter-rouge">os.path.join()</code>!
+<img src="http://localhost:4000/public/unpack_arg_lists/photo5.png" alt="code5" class="center-image" /></p>
 
 <p>Utilizing the almighty * I was able to easily grep files for a regex pattern &amp; pull header rows for any files that were reported as having matches by my previous grep call with one python script.
-<img src="http://stubs.github.io/public/unpack_arg_lists/photo6.png" alt="code6" class="center-image" /></p>
+<img src="http://localhost:4000/public/unpack_arg_lists/photo6.png" alt="code6" class="center-image" /></p>
 
 <h3 id="related-links">Related Links:</h3>
 <ul>
@@ -423,7 +604,7 @@ to collect the first row from the files we are working with (assuming that the f
 
      <p> A quick rundown of using Python's pandas package to prep flat file data for plotting with Dash. </p>
      <p> <a class = "graybutton" href="/2017/07/10/dash/">Continue reading</a></p>
-     <!--<p><img src="http://stubs.github.io/public/dash/dash_app.png" alt="my screenshot" class="center-image" /></p>
+     <!--<p><img src="http://localhost:4000/public/dash/dash_app.png" alt="my screenshot" class="center-image" /></p>
 
 <p>Anytime I have a chance to make something visual out of my work I jump at the
 opportunity. I recently had some free time on my hands, and lo and behold I also had my
@@ -444,8 +625,8 @@ is available on my GitHub at:</p>
 <p>As I mentioned, we are going to be using pandas and Dash (and a few other packages)
 for this lesson.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env python</span>
-<span class="kn">import</span> <span class="nn">dash</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span><span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="n">dcc</span>
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="n">html</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
@@ -464,10 +645,10 @@ increase my productivity when it comes to working with CSV/Excel data.</p>
 Dataframe object (one of two data structures that pandas brings to Python). For brevity,
 I am only going to be showing a portion of the 213 rows that are in this xlsx file.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#read in excel data</span>
-<span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s">"data/aug_dec_2016.xlsx"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#read in excel data
+</span><span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s">"data/aug_dec_2016.xlsx"</span><span class="p">)</span>
 </code></pre></div></div>
-<p><img src="http://stubs.github.io/public/dash/dataframe.png" alt="dataframe" class="center-image" /></p>
+<p><img src="http://localhost:4000/public/dash/dataframe.png" alt="dataframe" class="center-image" /></p>
 
 <p>For those of you wondering about the “NaT” value in some of the cells, we can
 read those cells as having no value entered in them. They are essentially NULL.</p>
@@ -479,27 +660,27 @@ the date column. Under the second comment in the code snippet below, we can see 
 I am <em>applying</em> that lambda function to the “dateordered” and “datereturned” columns
 in our dataframe.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#lambda function to get monthly periods from date fields</span>
-<span class="n">to_string</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)[:</span><span class="mi">7</span><span class="p">]</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#lambda function to get monthly periods from date fields
+</span><span class="n">to_string</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)[:</span><span class="mi">7</span><span class="p">]</span>
 
-<span class="c">#add monthly period columns as per directions</span>
-<span class="n">data_df</span><span class="p">[</span><span class="s">'period'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">dateordered</span><span class="o">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">to_string</span><span class="p">)</span>
-<span class="n">data_df</span><span class="p">[</span><span class="s">'rperiod'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">datereturned</span><span class="o">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">to_string</span><span class="p">)</span>
+<span class="c1">#add monthly period columns as per directions
+</span><span class="n">data_df</span><span class="p">[</span><span class="s">'period'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">.</span><span class="n">dateordered</span><span class="p">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">to_string</span><span class="p">)</span>
+<span class="n">data_df</span><span class="p">[</span><span class="s">'rperiod'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">.</span><span class="n">datereturned</span><span class="p">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">to_string</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>I just recently discovered the pandas <code class="highlighter-rouge">where</code> statement for adding a touch of conditional
+<p>I just recently discovered the pandas <code class="language-plaintext highlighter-rouge">where</code> statement for adding a touch of conditional
 flare to manipulating our data. Let’s look at the code first and then we’ll step through
 what the details.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#add returns column to separate true orders from true returns</span>
-<span class="n">data_df</span><span class="p">[</span><span class="s">'returns'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">orders</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data_df</span><span class="o">.</span><span class="n">orderstatus</span> <span class="o">==</span> <span class="s">'returned'</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">data_df</span><span class="p">[</span><span class="s">'orders'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">orders</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data_df</span><span class="o">.</span><span class="n">orderstatus</span> <span class="o">==</span> <span class="s">'complete'</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#add returns column to separate true orders from true returns
+</span><span class="n">data_df</span><span class="p">[</span><span class="s">'returns'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">.</span><span class="n">orders</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">data_df</span><span class="p">.</span><span class="n">orderstatus</span> <span class="o">==</span> <span class="s">'returned'</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">data_df</span><span class="p">[</span><span class="s">'orders'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">.</span><span class="n">orders</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">data_df</span><span class="p">.</span><span class="n">orderstatus</span> <span class="o">==</span> <span class="s">'complete'</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>Let’s use the first line from directly above as our example. In plain English,
 we are adding a new column named “returns” to our dataframe object. Looking to
 the already established “orders” column as the source that is going to populate
-the new column.  Our <code class="highlighter-rouge">where</code> statement allows us to set conditional rules for how
+the new column.  Our <code class="language-plaintext highlighter-rouge">where</code> statement allows us to set conditional rules for how
 we are going to populate the new column. The rules for this example state that
 for a given row, set the value for “returns” column equal to the value that is
 currently in the row’s “order” column <u>IF</u> that row’s “orderstatus” column
@@ -509,29 +690,29 @@ around and doing it once more, except this time I set anything in the “orders�
 that did not have an “orderstatus” equal to “complete” to 0. I am left with a
 dataframe that is much easier to work with (in my opinion).</p>
 
-<p><img src="http://stubs.github.io/public/dash/dataframe2.png" alt="dataframe2" class="center-image" /></p>
+<p><img src="http://localhost:4000/public/dash/dataframe2.png" alt="dataframe2" class="center-image" /></p>
 
 <p>Great! Our dataframe object now has clearly labeled columns for orders AND returns
 instead of having everything simply in the “orders” column.  Now let us make 2 new dataframes
 by selecting only certain columns we need from our original.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#make new dataframes for returns &amp; orders</span>
-<span class="n">returns</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[[</span><span class="s">"rperiod"</span><span class="p">,</span><span class="s">"returns"</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">orders</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[[</span><span class="s">"period"</span><span class="p">,</span> <span class="s">"orders"</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#make new dataframes for returns &amp; orders
+</span><span class="n">returns</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[[</span><span class="s">"rperiod"</span><span class="p">,</span><span class="s">"returns"</span><span class="p">]].</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[[</span><span class="s">"period"</span><span class="p">,</span> <span class="s">"orders"</span><span class="p">]].</span><span class="n">copy</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>To actually do this with pandas, we simply need to pass a list of the columns we require from
-the original dataframe. You will also notice that I am appending a <code class="highlighter-rouge">.copy()</code> as well.
+the original dataframe. You will also notice that I am appending a <code class="language-plaintext highlighter-rouge">.copy()</code> as well.
 In pandas, indexing a dataframe returns a reference to the initial dataframe.
-Thus, changing the subset will change the initial dataframe. This <code class="highlighter-rouge">.copy()</code> will
+Thus, changing the subset will change the initial dataframe. This <code class="language-plaintext highlighter-rouge">.copy()</code> will
 make these new dataframes independent of the original.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#rename column</span>
-<span class="n">returns</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s">"rperiod"</span><span class="p">:</span> <span class="s">"period"</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#rename column
+</span><span class="n">returns</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s">"rperiod"</span><span class="p">:</span> <span class="s">"period"</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-<span class="c">#group by periods and sum</span>
-<span class="n">returns</span> <span class="o">=</span> <span class="n">returns</span><span class="p">[</span><span class="n">returns</span><span class="o">.</span><span class="n">period</span> <span class="o">&lt;&gt;</span> <span class="s">"NaT"</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">"period"</span><span class="p">)[</span><span class="s">"returns"</span><span class="p">]</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="n">orders</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[</span><span class="n">orders</span><span class="o">.</span><span class="n">period</span> <span class="o">&lt;&gt;</span> <span class="s">"NaT"</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">"period"</span><span class="p">)[</span><span class="s">"orders"</span><span class="p">]</span><span class="o">.</span><span class="nb">sum</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="c1">#group by periods and sum
+</span><span class="n">returns</span> <span class="o">=</span> <span class="n">returns</span><span class="p">[</span><span class="n">returns</span><span class="p">.</span><span class="n">period</span> <span class="o">&lt;&gt;</span> <span class="s">"NaT"</span><span class="p">].</span><span class="n">groupby</span><span class="p">(</span><span class="s">"period"</span><span class="p">)[</span><span class="s">"returns"</span><span class="p">].</span><span class="nb">sum</span><span class="p">().</span><span class="n">to_frame</span><span class="p">().</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[</span><span class="n">orders</span><span class="p">.</span><span class="n">period</span> <span class="o">&lt;&gt;</span> <span class="s">"NaT"</span><span class="p">].</span><span class="n">groupby</span><span class="p">(</span><span class="s">"period"</span><span class="p">)[</span><span class="s">"orders"</span><span class="p">].</span><span class="nb">sum</span><span class="p">().</span><span class="n">to_frame</span><span class="p">().</span><span class="n">reset_index</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>We are nearing the home stretch! The two new dataframes that we created in the
@@ -541,38 +722,38 @@ As it stands now, returns and orders do not have any columns that are the same.
 This can easily be addressed by renaming a column.  I chose to rename the “rperiod”
 column in the returns dataframe to just “period”. We could now combine these two
 dataframes, but before we actually do that I want to calculate the sum of returns
-or orders that take place for each period. This is accomplished by calling <code class="highlighter-rouge">.groupby("period")</code>
+or orders that take place for each period. This is accomplished by calling <code class="language-plaintext highlighter-rouge">.groupby("period")</code>
 on each of the two dataframes. groupby() typically refers to a process where we’d
 like to split a dataset into groups, apply some function (typically aggregation),
 and then combine the groups together. Once all of our periods are grouped together,
-we are going to want to apply the <code class="highlighter-rouge">.sum()</code> function to the returns and orders columns.
-The <code class="highlighter-rouge">.to_frame().reset_index()</code> performs a little bit of housekeeping. With these
+we are going to want to apply the <code class="language-plaintext highlighter-rouge">.sum()</code> function to the returns and orders columns.
+The <code class="language-plaintext highlighter-rouge">.to_frame().reset_index()</code> performs a little bit of housekeeping. With these
 two function calls we are stating we want our returned object to be a dataframe
 (not a series) and that we want the period column to not be an index for the dataframe.
 What we get is a set of nice, neat, dataframes of the sums of returns and orders.</p>
 
-<p><img src="http://stubs.github.io/public/dash/returns_sums.png" alt="returns sums" class="center-image" /></p>
+<p><img src="http://localhost:4000/public/dash/returns_sums.png" alt="returns sums" class="center-image" /></p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#merge the two new dataframes</span>
-<span class="n">month_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">"outer"</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s">"period"</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#merge the two new dataframes
+</span><span class="n">month_df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">"outer"</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s">"period"</span><span class="p">).</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>Now we can combine our returns and orders dataframes together. In pandas this is called merging. This is similar to joining in SQL.</p>
 
-<p><img src="http://stubs.github.io/public/dash/month_totals_df.png" alt="returns sums" class="center-image" /></p>
+<p><img src="http://localhost:4000/public/dash/month_totals_df.png" alt="returns sums" class="center-image" /></p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#add return rate computed columns</span>
-<span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="o">.</span><span class="n">returns</span><span class="o">/</span><span class="n">month_df</span><span class="o">.</span><span class="n">orders</span>
-<span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_percentage"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="o">.</span><span class="n">returns</span><span class="o">/</span><span class="n">month_df</span><span class="o">.</span><span class="n">orders</span> <span class="o">*</span> <span class="mi">100</span>
-<span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_percentage"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="o">.</span><span class="n">return_rate_percentage</span><span class="o">.</span><span class="nb">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_</span><span class="si">%</span><span class="s">_delta"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">month_df</span><span class="o">.</span><span class="n">return_rate_percentage</span> <span class="o">-</span> <span class="n">month_df</span><span class="o">.</span><span class="n">return_rate_percentage</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">month_df</span><span class="o">.</span><span class="n">return_rate_percentage</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-<span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_</span><span class="si">%</span><span class="s">_delta"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_</span><span class="si">%</span><span class="s">_delta"</span><span class="p">]</span><span class="o">.</span><span class="nb">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#add return rate computed columns
+</span><span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="p">.</span><span class="n">returns</span><span class="o">/</span><span class="n">month_df</span><span class="p">.</span><span class="n">orders</span>
+<span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_percentage"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="p">.</span><span class="n">returns</span><span class="o">/</span><span class="n">month_df</span><span class="p">.</span><span class="n">orders</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_percentage"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="p">.</span><span class="n">return_rate_percentage</span><span class="p">.</span><span class="nb">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_%_delta"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">month_df</span><span class="p">.</span><span class="n">return_rate_percentage</span> <span class="o">-</span> <span class="n">month_df</span><span class="p">.</span><span class="n">return_rate_percentage</span><span class="p">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">month_df</span><span class="p">.</span><span class="n">return_rate_percentage</span><span class="p">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_%_delta"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_df</span><span class="p">[</span><span class="s">"return_rate_%_delta"</span><span class="p">].</span><span class="nb">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>While we are at it, let us add in some additional columns to see how the rate of returns varies for each monthly period.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#output to excel</span>
-<span class="n">month_df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s">"data/results.xlsx"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#output to excel
+</span><span class="n">month_df</span><span class="p">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s">"data/results.xlsx"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>Lastly, output the merged dataframe to an excel file.</p>
@@ -582,7 +763,7 @@ What we get is a set of nice, neat, dataframes of the sums of returns and orders
 <p>OK, in the next post we’ll get to how we can create reactive data visualizations for the dataframes we have just worked with to end up with
 something similar to what you see below!</p>
 
-<p><img src="http://stubs.github.io/public/dash/dash_animation.gif" alt="my gif" class="center-image" /></p>
+<p><img src="http://localhost:4000/public/dash/dash_animation.gif" alt="my gif" class="center-image" /></p>
 
 <h3 id="related-links">Related Links:</h3>
 <ul>
@@ -638,7 +819,7 @@ available in the virtualenv you install them to.</p>
 
 <h2 id="how">How?</h2>
 <h3 id="installing-virtualenv">Installing virtualenv</h3>
-<p>Assuming you already have <code class="highlighter-rouge">pip</code> installed, you are going to want to install virtualenv globally.</p>
+<p>Assuming you already have <code class="language-plaintext highlighter-rouge">pip</code> installed, you are going to want to install virtualenv globally.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>virtualenv
 </code></pre></div></div>
@@ -654,7 +835,7 @@ Also creating executable <span class="k">in</span> ~/dev/vrtlenv/env/bin/python
 Installing setuptools, pip, wheel...done.
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">virtualenv env</code> bit is creating a virtual environment to a directory named “env”. It is 
+<p>The <code class="language-plaintext highlighter-rouge">virtualenv env</code> bit is creating a virtual environment to a directory named “env”. It is 
 not required that you name it “env”, but it is convention. Also, I would like others looking at 
 a project I have started to have to do as little as possible to continue to work. Moving on, to actually 
 step into the new virtual environment you need to <em>activate</em> it.</p>
@@ -663,26 +844,26 @@ step into the new virtual environment you need to <em>activate</em> it.</p>
 </code></pre></div></div>
 
 <p>You’ll be able to tell that you are in said virtual environment because there will
-now be <code class="highlighter-rouge">(env)</code> prepended to the start of your command line prompt (if you chose
+now be <code class="language-plaintext highlighter-rouge">(env)</code> prepended to the start of your command line prompt (if you chose
 to go with a name other than “env” it will show up instead of “env”).</p>
 
-<p>As an additional sanity check you can <code class="highlighter-rouge">pip list</code> once the virtualenv is activated.
+<p>As an additional sanity check you can <code class="language-plaintext highlighter-rouge">pip list</code> once the virtualenv is activated.
 If you had any pip packages installed globally you should not see them in the pip
 list output from within this virtual environment….because this is an isolated work
 environment! Now you can pip install any packages/modules you need for your new python
 program and it there will be no worries about whether or not they will cause any kind
 of issues with other global packages.</p>
 
-<p>Once you are done working do not forget to <code class="highlighter-rouge">deactivate</code> the virtualenv. Like before
+<p>Once you are done working do not forget to <code class="language-plaintext highlighter-rouge">deactivate</code> the virtualenv. Like before
 you’ll be able to tell that you have successfully returned to the global environment
-by noticing the lack of the <code class="highlighter-rouge">(env)</code> at the start of your command line prompt. Any time 
+by noticing the lack of the <code class="language-plaintext highlighter-rouge">(env)</code> at the start of your command line prompt. Any time 
 you ever need to do more work on your project just remember to activate your virtualenv 
-by calling <code class="highlighter-rouge">$ source env/bin/activate</code> from inside the project’s directory!</p>
+by calling <code class="language-plaintext highlighter-rouge">$ source env/bin/activate</code> from inside the project’s directory!</p>
 
 <hr />
 
 <p>While I have never actually ran into these dependency issues, I got sick of 
-removing a ton of stuff from my <code class="highlighter-rouge">pip freeze &gt; requirements.txt</code> output when I was trying to share 
+removing a ton of stuff from my <code class="language-plaintext highlighter-rouge">pip freeze &gt; requirements.txt</code> output when I was trying to share 
 some work with others. ~Lazy, I know.~ I don’t know about y’all, but 
 I would rather invest some time to setup these isolated virtual environments 
 just to save myself the hassle of having to avoid cleaning up my requirements.txt file.</p>

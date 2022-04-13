@@ -272,7 +272,7 @@ option. It will prompt the user for “y” or “n” confirmation before execu
 dryrun.</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-p</span>      Echo each <span class="nb">command </span>to be executed and ask the user whether it should be executed.  An affirmative response, ‘y’ <span class="k">in </span>the POSIX locale, causes the <span class="nb">command </span>to be executed, any
-             other response causes it to be skipped.  No commands are executed <span class="k">if </span>the process is not attached to a terminal.
+        other response causes it to be skipped.  No commands are executed <span class="k">if </span>the process is not attached to a terminal.
 </code></pre></div></div>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> | <span class="nb">grep</span> <span class="nt">-e</span> json.<span class="k">*</span> | <span class="nb">sed</span> <span class="s1">'s/access/error/g'</span> | xargs <span class="nt">-n1</span> <span class="nt">-p</span> <span class="nb">mkdir
@@ -286,6 +286,15 @@ mkdir </span>json_a_error_log_table/?...y
 <!--<div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="//2022/04/09/cdo/">
+            Bulk Renaming With Vim's :cdo
+            <small>09 Apr 2022</small>
+          </a>
+        </h3>
+      </li>
     
       <li>
         <h3>

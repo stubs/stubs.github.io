@@ -4,13 +4,182 @@
  <title>Aaron D. Gonzalez</title>
  <link href="http://localhost:4000/atom.xml" rel="self"/>
  <link href="http://localhost:4000/"/>
- <updated>2022-04-02T19:47:57-04:00</updated>
+ <updated>2022-04-13T12:55:47-04:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Aaron D. Gonzalez</name>
    <email>a.gonzalez979@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Bulk Renaming With Vim's :cdo</title>
+   <link href="http://localhost:4000/2022/04/09/cdo/"/>
+   <updated>2022-04-09T00:00:00-04:00</updated>
+   <id>http://localhost:4000/2022/04/09/cdo</id>
+   <content type="html">&lt;p&gt;Last week we ended by piecing together the following shell commands to make a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;json_*_error_log_table/&lt;/code&gt; directory for every &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;json_*_access_log_table/&lt;/code&gt; also present.&lt;/p&gt;
+
+&lt;iframe src=&quot;https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&amp;amp;t=one-dark&amp;amp;wt=none&amp;amp;l=application%2Fx-sh&amp;amp;width=703&amp;amp;ds=true&amp;amp;dsyoff=20px&amp;amp;dsblur=68px&amp;amp;wc=false&amp;amp;wa=true&amp;amp;pv=56px&amp;amp;ph=56px&amp;amp;ln=false&amp;amp;fl=1&amp;amp;fm=Hack&amp;amp;fs=14px&amp;amp;lh=133%25&amp;amp;si=false&amp;amp;es=2x&amp;amp;wm=false&amp;amp;code=ls%2520%257C%2520grep%2520-e%2520json.*%2520%257C%2520sed%2520%27s%252Faccess%252Ferror%252Fg%27%2520%257C%2520xargs%2520-n1%2520mkdir&quot; style=&quot;width: 720px; height: 180px; border:0; transform: scale(1); overflow:hidden;&quot; sandbox=&quot;allow-scripts allow-same-origin&quot;&gt;
+&lt;/iframe&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~/big_query&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-1&lt;/span&gt;
+json_a_access_log_table/
+json_a_error_log_table/
+json_b_access_log_table/
+json_b_error_log_table/
+json_c_access_log_table/
+json_c_error_log_table/
+json_d_access_log_table/
+json_d_error_log_table/
+json_e_access_log_table/
+json_e_error_log_table/
+json_f_access_log_table/
+json_f_error_log_table/
+json_g_access_log_table/
+json_g_error_log_table/
+json_h_access_log_table/
+json_h_error_log_table/
+json_i_access_log_table/
+json_i_error_log_table/
+json_j_access_log_table/
+json_j_error_log_table/
+json_k_access_log_table/
+json_k_error_log_table/
+native_a_access_log_table/
+native_b_access_log_table/
+native_c_access_log_table/
+native_e_access_log_table/
+native_f_access_log_table/
+native_g_access_log_table/
+native_i_access_log_table/
+native_j_access_log_table/
+native_k_access_log_table/
+native_m_access_log_table/
+native_n_access_log_table/
+native_q_access_log_table/
+native_r_access_log_table/
+native_u_access_log_table/
+native_v_access_log_table/
+native_y_access_log_table/
+native_z_access_log_table/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Neat! Now we just need to copy over some files into the newly created directories and make some minor edits.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Step 1: Copying JSON Files.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;After creating our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;error_log_table&lt;/code&gt; directories in last week’s post we basically have the following scenario. Our &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;access_logs_table&lt;/code&gt; directories have &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;table_def.json&lt;/code&gt; files
+that we need to copy over to corresponding &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;error_logs_table&lt;/code&gt; directories.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+├── native_&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;_access_logs_table
+│   ├── create.sql
+│   └── insert.sql
+├── json_&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;_error_logs_table
+└── json_&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;_access_logs_table
+    └── table_def.json
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We can easily copy over these files using a simple for-loop in our shell.&lt;/p&gt;
+
+&lt;iframe src=&quot;https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&amp;amp;t=one-dark&amp;amp;wt=none&amp;amp;l=application%2Fx-sh&amp;amp;width=703&amp;amp;ds=true&amp;amp;dsyoff=20px&amp;amp;dsblur=68px&amp;amp;wc=false&amp;amp;wa=true&amp;amp;pv=56px&amp;amp;ph=56px&amp;amp;ln=false&amp;amp;fl=1&amp;amp;fm=Hack&amp;amp;fs=14px&amp;amp;lh=133%25&amp;amp;si=false&amp;amp;es=2x&amp;amp;wm=false&amp;amp;code=for%2520f%2520in%2520%2524%28ls%2520*%252F*.json%29%250Ado%250A%2520%2520source%253D%2524f%250A%2520%2520dest%253D%2524%28echo%2520%2524source%2520%257C%2520sed%2520%27s%252Faccess%252Ferror%252Fg%27%29%250A%2520%2520cp%2520%2524source%2520%2524dest%250Adone&quot; style=&quot;width: 720px; height: 268px; border:0; transform: scale(1); overflow:hidden;&quot; sandbox=&quot;allow-scripts allow-same-origin&quot;&gt;
+&lt;/iframe&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Step 2: Vim’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;:cdo&lt;/code&gt; command&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now we can get down to business. Below are the contents of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;json_a_error_logs_table/table_def.json&lt;/code&gt; file.
+You’ll notice that there are 3 lines in the JSON that need to be updated (as denoted by the obnoxious not-valid-json I added).&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;tableReference&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;projectId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;my_project&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;datasetId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;logs&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;tableId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;json_a_access_logs&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;lt;-------&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;wrong&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;tableId&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;externalDataConfiguration&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;autodetect&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;schema&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;fields&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+              &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;json&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+              &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;STRING&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;sourceUris&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gs://fake-test-bucket/topics/json_a_access_logs/*&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;lt;-------&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;wrong&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;sourceUris&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;hivePartitioningOptions&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;mode&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;CUSTOM&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;sourceUriPrefix&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gs://fake-test-bucket/topics/json_a_access_logs/{dt:DATE}/{hour:INTEGER}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;lt;-------&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;wrong&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;sourceUriPrefix&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;requirePartitionFilter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;sourceFormat&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;CSV&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;compression&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;GZIP&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;ignoreUnknownValues&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Just like before, this wouldn’t be that much of a hassle if it was only this file that needed updating, but in this case we have &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;table_def.json&lt;/code&gt;’s
+for directories a - k. Imagine having to manually repeat this for potentially even more 😓. Vim’s cdo command can be leveraged easily here!
+For those who are not aware, see the quick snippet from the vim help documentation:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;:cdo[!] {cmd}		Execute {cmd} in each valid entry in the quickfix list.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;All we have to do now is populate vim’s quickfixlist with vim’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;:grep&lt;/code&gt; command. (If needed, look up any of the millions of tutorials already available covering &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;:grep&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;First, let’s find all instances of “access_logs” in all the json files in the new error_log_table directories.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;http://localhost:4000/public/cdo/vim1.png&quot; alt=&quot;vim1&quot; class=&quot;center-image&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;The following command will populate vim’s quickfixlist with all grep matches.&lt;/b&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;http://localhost:4000/public/cdo/vim2.png&quot; alt=&quot;vim2&quot; class=&quot;center-image&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;You can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;:clist&lt;/code&gt; to see these matches.&lt;/b&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;http://localhost:4000/public/cdo/vim3.png&quot; alt=&quot;vim3&quot; class=&quot;center-image&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Execute this substitution for every entry in the quickfixlist.&lt;/b&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;:cdo s/access_/error_/g | update&lt;/code&gt; will replace every instance of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;access_&lt;/code&gt; with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;error_&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;update&lt;/code&gt; will write the changes to each file.&lt;/p&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>Unix tools - xargs</title>
@@ -170,7 +339,7 @@ option. It will prompt the user for “y” or “n” confirmation before execu
 dryrun.&lt;/p&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt;      Echo each &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;to be executed and ask the user whether it should be executed.  An affirmative response, ‘y’ &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the POSIX locale, causes the &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;to be executed, any
-             other response causes it to be skipped.  No commands are executed &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;the process is not attached to a terminal.
+        other response causes it to be skipped.  No commands are executed &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;the process is not attached to a terminal.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~/big_query&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; json.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;sed&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;s/access/error/g&apos;&lt;/span&gt; | xargs &lt;span class=&quot;nt&quot;&gt;-n1&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;mkdir

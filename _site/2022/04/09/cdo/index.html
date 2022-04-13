@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Bulk Renaming With Vim's :cdo &middot; Aaron D. Gonzalez
+    
+  </title>
+  
+  <!-- custom JS -->
+  <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.0/p5.js"></script>-->
+ <script src="https://use.fontawesome.com/194957a89a.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Latest compiled and minified CSS -->
+  <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/TXCactus.png">
+  <link rel="shortcut icon" href="/public/TXCactus.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+
+  <!-- Google Analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-89571013-1', 'auto');
+  ga('send', 'pageview');
+
+  </script>
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-item">
+        <p>I'll <i>occasionally</i> throw some personal projects and professional endeavors up here. ===></p>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a class="sidebar-nav-item" href="/">Home</a>
+        
+        
+        
+        
+            
+        
+        
+        
+            
+        
+        
+        
+            
+            <a class="sidebar-nav-item" href="/about/">About</a>
+            
+        
+        
+        
+        
+        
+            
+        
+        
+        <!--<a class="sidebar-nav-item" href="/about.html">About</a>-->
+        <a class="sidebar-nav-item" href="https://github.com/stubs">GitHub</a>
+        <span class="sidebar-nav-item">Currently v1.0.0</span>
+    </nav>
+
+    <div class="sidebar-item">
+        <p>&copy; 2022. All rights reserved.</p>
+    </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">Aaron D. Gonzalez</a>
+            <small></small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Bulk Renaming With Vim's :cdo</h1>
+  <p>Last week we ended by piecing together the following shell commands to make a <code class="language-plaintext highlighter-rouge">json_*_error_log_table/</code> directory for every <code class="language-plaintext highlighter-rouge">json_*_access_log_table/</code> also present.</p>
+
+<iframe src="https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&amp;t=one-dark&amp;wt=none&amp;l=application%2Fx-sh&amp;width=703&amp;ds=true&amp;dsyoff=20px&amp;dsblur=68px&amp;wc=false&amp;wa=true&amp;pv=56px&amp;ph=56px&amp;ln=false&amp;fl=1&amp;fm=Hack&amp;fs=14px&amp;lh=133%25&amp;si=false&amp;es=2x&amp;wm=false&amp;code=ls%2520%257C%2520grep%2520-e%2520json.*%2520%257C%2520sed%2520%27s%252Faccess%252Ferror%252Fg%27%2520%257C%2520xargs%2520-n1%2520mkdir" style="width: 720px; height: 180px; border:0; transform: scale(1); overflow:hidden;" sandbox="allow-scripts allow-same-origin">
+</iframe>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/big_query<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-1</span>
+json_a_access_log_table/
+json_a_error_log_table/
+json_b_access_log_table/
+json_b_error_log_table/
+json_c_access_log_table/
+json_c_error_log_table/
+json_d_access_log_table/
+json_d_error_log_table/
+json_e_access_log_table/
+json_e_error_log_table/
+json_f_access_log_table/
+json_f_error_log_table/
+json_g_access_log_table/
+json_g_error_log_table/
+json_h_access_log_table/
+json_h_error_log_table/
+json_i_access_log_table/
+json_i_error_log_table/
+json_j_access_log_table/
+json_j_error_log_table/
+json_k_access_log_table/
+json_k_error_log_table/
+native_a_access_log_table/
+native_b_access_log_table/
+native_c_access_log_table/
+native_e_access_log_table/
+native_f_access_log_table/
+native_g_access_log_table/
+native_i_access_log_table/
+native_j_access_log_table/
+native_k_access_log_table/
+native_m_access_log_table/
+native_n_access_log_table/
+native_q_access_log_table/
+native_r_access_log_table/
+native_u_access_log_table/
+native_v_access_log_table/
+native_y_access_log_table/
+native_z_access_log_table/
+</code></pre></div></div>
+
+<p>Neat! Now we just need to copy over some files into the newly created directories and make some minor edits.</p>
+
+<ul>
+  <li>Step 1: Copying JSON Files.</li>
+</ul>
+
+<p>After creating our <code class="language-plaintext highlighter-rouge">error_log_table</code> directories in last week’s post we basically have the following scenario. Our <code class="language-plaintext highlighter-rouge">access_logs_table</code> directories have <code class="language-plaintext highlighter-rouge">table_def.json</code> files
+that we need to copy over to corresponding <code class="language-plaintext highlighter-rouge">error_logs_table</code> directories.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">.</span>
+├── native_<span class="k">*</span>_access_logs_table
+│   ├── create.sql
+│   └── insert.sql
+├── json_<span class="k">*</span>_error_logs_table
+└── json_<span class="k">*</span>_access_logs_table
+    └── table_def.json
+
+</code></pre></div></div>
+
+<p>We can easily copy over these files using a simple for-loop in our shell.</p>
+
+<iframe src="https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&amp;t=one-dark&amp;wt=none&amp;l=application%2Fx-sh&amp;width=703&amp;ds=true&amp;dsyoff=20px&amp;dsblur=68px&amp;wc=false&amp;wa=true&amp;pv=56px&amp;ph=56px&amp;ln=false&amp;fl=1&amp;fm=Hack&amp;fs=14px&amp;lh=133%25&amp;si=false&amp;es=2x&amp;wm=false&amp;code=for%2520f%2520in%2520%2524%28ls%2520*%252F*.json%29%250Ado%250A%2520%2520source%253D%2524f%250A%2520%2520dest%253D%2524%28echo%2520%2524source%2520%257C%2520sed%2520%27s%252Faccess%252Ferror%252Fg%27%29%250A%2520%2520cp%2520%2524source%2520%2524dest%250Adone" style="width: 720px; height: 268px; border:0; transform: scale(1); overflow:hidden;" sandbox="allow-scripts allow-same-origin">
+</iframe>
+
+<ul>
+  <li>Step 2: Vim’s <code class="language-plaintext highlighter-rouge">:cdo</code> command</li>
+</ul>
+
+<p>Now we can get down to business. Below are the contents of the <code class="language-plaintext highlighter-rouge">json_a_error_logs_table/table_def.json</code> file.
+You’ll notice that there are 3 lines in the JSON that need to be updated (as denoted by the obnoxious not-valid-json I added).</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"tableReference"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"projectId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my_project"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"datasetId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"logs"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"tableId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"json_a_access_logs"</span><span class="w">     </span><span class="err">&lt;-------</span><span class="w"> </span><span class="err">wrong</span><span class="w"> </span><span class="err">tableId</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"externalDataConfiguration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"autodetect"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"schema"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"json"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STRING"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"sourceUris"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"gs://fake-test-bucket/topics/json_a_access_logs/*"</span><span class="w">   </span><span class="err">&lt;-------</span><span class="w"> </span><span class="err">wrong</span><span class="w"> </span><span class="err">sourceUris</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"hivePartitioningOptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CUSTOM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"sourceUriPrefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gs://fake-test-bucket/topics/json_a_access_logs/{dt:DATE}/{hour:INTEGER}"</span><span class="p">,</span><span class="w">    </span><span class="err">&lt;-------</span><span class="w"> </span><span class="err">wrong</span><span class="w"> </span><span class="err">sourceUriPrefix</span><span class="w">
+      </span><span class="nl">"requirePartitionFilter"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"sourceFormat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CSV"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"compression"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GZIP"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ignoreUnknownValues"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Just like before, this wouldn’t be that much of a hassle if it was only this file that needed updating, but in this case we have <code class="language-plaintext highlighter-rouge">table_def.json</code>’s
+for directories a - k. Imagine having to manually repeat this for potentially even more 😓. Vim’s cdo command can be leveraged easily here!
+For those who are not aware, see the quick snippet from the vim help documentation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:cdo[!] {cmd}		Execute {cmd} in each valid entry in the quickfix list.
+</code></pre></div></div>
+
+<p>All we have to do now is populate vim’s quickfixlist with vim’s <code class="language-plaintext highlighter-rouge">:grep</code> command. (If needed, look up any of the millions of tutorials already available covering <code class="language-plaintext highlighter-rouge">:grep</code>)</p>
+
+<p>First, let’s find all instances of “access_logs” in all the json files in the new error_log_table directories.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="http://localhost:4000/public/cdo/vim1.png" alt="vim1" class="center-image" /></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><b>The following command will populate vim’s quickfixlist with all grep matches.</b></td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="http://localhost:4000/public/cdo/vim2.png" alt="vim2" class="center-image" /></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><b>You can use <code class="language-plaintext highlighter-rouge">:clist</code> to see these matches.</b></td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="http://localhost:4000/public/cdo/vim3.png" alt="vim3" class="center-image" /></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><b>Execute this substitution for every entry in the quickfixlist.</b></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">:cdo s/access_/error_/g | update</code> will replace every instance of <code class="language-plaintext highlighter-rouge">access_</code> with <code class="language-plaintext highlighter-rouge">error_</code> and <code class="language-plaintext highlighter-rouge">update</code> will write the changes to each file.</p>
+
+
+</div>
+<!--<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="//2022/04/02/xargs/">
+            Unix tools - xargs
+            <small>02 Apr 2022</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2018/05/24/aws-s3-cp/">
+            Read Files on AWS S3 Without Copying As A Local File
+            <small>24 May 2018</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2017/10/13/dash2/">
+            Data Visualization with pandas & Dash Part 2
+            <small>13 Oct 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2017/09/02/unpack-arg-lists/">
+            Unpacking Argument Lists
+            <small>02 Sep 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2017/07/10/dash/">
+            Data Visualization with pandas & Dash
+            <small>10 Jul 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2017/04/10/Virtualenv/">
+            Virtualenv with Python
+            <small>10 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="//2016/04/30/Playing-around-with-p5/">
+            Playing around with P5.js
+            <small>30 Apr 2016</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

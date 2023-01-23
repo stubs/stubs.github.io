@@ -9,7 +9,6 @@ title:               Aaron D. Gonzalez
 tagline:             ''
 description:         'I''ll <i>occasionally</i> throw some personal projects and professional endeavors up here. ===>'
 url:                 http://stubs.github.io
-markdown:           GFM
 baseurl:             ''
 paginate:            5
 github: 'https://github.com/stubs'

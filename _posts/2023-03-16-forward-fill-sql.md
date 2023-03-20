@@ -76,7 +76,7 @@ Next, let's join that full hour's five minute interval timeseries to our gap dat
 select * FROM _grps ORDER BY id, time_gen
 ```
 
-|![grps]({{site.url}}/public/gaps/_grps.png){: .center-image }|
+|![grps]({{site.url}}/public/gaps/grps.png){: .center-image }|
 |:--:|
 | <b>Here we can clearly see the null values for the gap rows we filled in with our select from full_time_series.</b>|
 

@@ -4,7 +4,7 @@ title: Islands and Gaps
 excerpt: A classic SQL exercise in the real world!
 ---
 
-## Islands and Gaps?
+## Islands?
 This past week I had the _pleasure_ of seeing the ole Islands and Gaps SQL problem out in the wild! It's pretty common actually, but this time
 I found myself having to do a little bit of backfilling in addition to the forward filling tasks I have usually been charged with. Let's do a quick
 refresher before jumping into the meat of the problem today.
@@ -51,6 +51,7 @@ with test_data AS (
 )
 SELECT * FROM full_time_series;
 ```
+
 |![full_time_series]({{site.url}}/public/gaps/full_time_series.png){: .center-image }|
 |:--:|
 | <b>Voila</b>|
@@ -74,6 +75,7 @@ Next, let's join that full hour's five minute interval timeseries to our gap dat
 )
 select * FROM _grps ORDER BY id, time_gen
 ```
+
 |![grps]({{site.url}}/public/gaps/_grps.png){: .center-image }|
 |:--:|
 | <b>Here we can clearly see the null values for the gap rows we filled in with our select from full_time_series.</b>|
@@ -120,6 +122,7 @@ filled AS (
 )
 SELECT * FROM filled ORDER BY id, time_gen
 ```
+
 |![filled]({{site.url}}/public/gaps/filled.png){: .center-image }|
 |:--:|
 | <b>A little color coding for y'all.</b>|
@@ -144,3 +147,4 @@ IF(occupancy_max is NULL, IF(forward_fill_grp = 0, first_value(occupancy_prev) o
 
 ## Extra Resources
 * [GCP's Count](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#count)
+* [GCP's If](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators#if)

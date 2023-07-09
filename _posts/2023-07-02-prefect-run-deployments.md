@@ -176,3 +176,7 @@ def export():
 |![Prefect UI]({{site.url}}/public/run_deployment/run_dep_prefect_gui.png){: .center-image }|
 |:--:|
 | <b>Our main `dummyjson_products` deployment now launches the downstream `dbt_downstream_model` as a "Subflow".</b>|
+
+
+## Extra Resources:
+* [Github repo for this posts' sample code](https://github.com/stubs/prefect-explorations)

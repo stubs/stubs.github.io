@@ -52,8 +52,6 @@ import json
 import requests
 
 from prefect import flow, task
-from prefect.deployments import run_deployment
-
 
 
 @flow

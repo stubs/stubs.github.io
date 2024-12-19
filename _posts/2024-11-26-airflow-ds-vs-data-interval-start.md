@@ -12,10 +12,10 @@ Adopting the use of datasets can help to create more dynamic workflows that are 
 As is often the case, _it depends_ 😈.
 
 # The Problem
-I've recently seen a few instances of eager engineers jumping at the chances to modernize some existing DAGs that had historically been scheduled via cron expressions.
-Often, I have seen DAGs historically running at multiple times a day.
-Not because that DAG required it, but because these multiple schedules throughout the day were a sort of proxy that represented an assumption for when some underlying source data was ready to be transformed further downstream.
-Choosing these cron expressions can run the gamut of being complete guesswork or at best some esoteric hueristics.
+I've recently seen instances of eager engineers jumping at the chance to modernize some existing DAGs that had historically been scheduled via cron expressions.
+The DAGs in question often are scheduled to run multiple times a day.
+Not because the DAGs required it, but because these numerous schedules throughout the day were a sort of proxy representing an assumption for when some underlying source data was ready to be transformed further downstream.
+Choosing these cron expressions can run the gamut of being complete guesswork or at best some esoteric heuristics.
 If you are lucky, you may have some concrete guarantee that said source data is ready by a specific time.
 Regardless, the end goal here is to deliver data to end users when underlying data sources are ready, as opposed to when someone might _think_ they are ready.
 Unfortunately, this can require more than simply updating the DAG's `schedule` param.

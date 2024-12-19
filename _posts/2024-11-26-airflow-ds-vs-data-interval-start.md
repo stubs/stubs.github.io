@@ -81,9 +81,8 @@ with DAG(
     print_template_vars()
 ```
 
-![Dag 1]({{site.url}}/public/airflow-template-vars/dag_1_print_template_vars_log.jpg){: .center-image }
----
-![Dag 2]({{site.url}}/public/airflow-template-vars/dag_2_print_template_vars_log.jpg){: .center-image }
+## Dag_1
+![Dag 1 Scheduled]({{site.url}}/public/airflow-template-vars/dag_1_print_template_vars_log.jpg){: .center-image }
 
 The airflow logs clearly show that a number of Airflow's [templated variables](https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html#variables) differ between the two DAGs.
 Let's start with `Dag_1`.
@@ -97,8 +96,11 @@ For example, we can see below that a manual trigger of `Dag_1` logs template var
 
 ![Dag 1 Manual]({{site.url}}/public/airflow-template-vars/dag_1_print_template_vars_log_manual.jpg){: .center-image }
 
+## Dag_2
 Moving on to `Dag_2`.
 Here we can see behavior identical to what we just saw with a manual run type of `Dag_1`.
+
+![Dag 2]({{site.url}}/public/airflow-template-vars/dag_2_print_template_vars_log.jpg){: .center-image }
 
 # TLDR
 Dataset triggered DAG runs do not follow the same pattern as scheduled DAG runs when it comes to a DAG run's `logical_date` and any templated variables that are derived from `logical_date`.
